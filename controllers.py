@@ -74,10 +74,10 @@ def get_rooms():
     for room in service.list_all_rooms():
         results.append(RoomResponse(
             id=room.id,
-            room_number=room.room_number,
-            room_type=room.room_type,
-            price_per_night=room.price_per_night,
-            is_available=room.is_available
+            room_number=room.number,                     # number
+            room_type=room.type,                         # type
+            price_per_night=room.price,                 # price
+            is_available=(room.status == "available")  # status -> bool
         ))
     return results
 
@@ -85,18 +85,18 @@ def get_rooms():
 @room_router.post("/", response_model=RoomResponse)
 def create_room(roomRequest: RoomRequest):
     room = Room(
-        room_number=roomRequest.room_number,
-        room_type=roomRequest.room_type,
-        price_per_night=roomRequest.price_per_night,
-        is_available=True
+        number=roomRequest.room_number,
+        type=roomRequest.room_type,
+        price=roomRequest.price_per_night,
+        status="available"
     )
     service.create_room(room)
     return RoomResponse(
         id=room.id,
-        room_number=room.room_number,
-        room_type=room.room_type,
-        price_per_night=room.price_per_night,
-        is_available=room.is_available
+        room_number=room.number,
+        room_type=room.type,
+        price_per_night=room.price,
+        is_available=(room.status == "available")
     )
 
 
