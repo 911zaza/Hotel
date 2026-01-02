@@ -1,5 +1,6 @@
 @CLIENT_URL=http://127.0.0.1:9090/clients/
-@ROOM_URL=http://127.0.0.1:9090/rooms/
+@ROOM_URL=http://127.0.0.1:9090/rooms/ 
+
 @RESERVATION_URL=http://127.0.0.1:9090/reservations/
 
 
@@ -15,12 +16,11 @@ POST {{CLIENT_URL}}
 Content-Type: application/json
 
 {
-  "name": "Fayssal",
-  "email": "fayssal@example.com",
-  "phone": "0612345678",
-  "address": "Ain Taoujdate, Maroc"
+  "name": "hassan",
+  "email": "hassan@example.com",
+  "phone": "0709876527",
+  "address": "Agadir, Maroc"
 }
-
 
 #################################################################
 ### ROOMS

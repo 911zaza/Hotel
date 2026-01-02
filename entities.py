@@ -18,17 +18,20 @@ class Client(Base):
 
 class Room(Base):
     __tablename__ = 'room'
+
     id = Column(Integer, primary_key=True, index=True)
-    room_number = Column(String, unique=True, nullable=False)
-    room_type = Column(String, nullable=False)
-    price_per_night = Column(Float, nullable=False)
-    is_available = Column(Boolean, default=True)
+    number = Column(String, unique=True, nullable=False)
+    type = Column(String(50), nullable=False)
+    price = Column(Float, nullable=False)
+    status = Column(String(20), default="available")
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, onupdate=func.now())
 
     reservations = relationship("Reservation", back_populates="room")
 
-
 class Reservation(Base):
     __tablename__ = 'reservation'
+
     id = Column(Integer, primary_key=True, index=True)
     client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
     room_id = Column(Integer, ForeignKey("room.id"), nullable=False)

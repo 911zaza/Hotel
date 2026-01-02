@@ -1,82 +1,97 @@
 from datetime import datetime
-from typing import Final
-import config
-from abc import ABC, abstractmethod
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy.orm import declarative_base, relationship
+
+Base = declarative_base()
+
+# ==========================
+# Client model
+# ==========================
+class Client(Base):
+    __tablename__ = "client"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
+    phone = Column(String(15), nullable=False)
+    address = Column(String(100), nullable=False)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
+
+    reservations = relationship("Reservation", back_populates="client")
+
+    def __repr__(self):
+        return f"<Client(id={self.id}, name={self.name}, email={self.email})>"
 
 
-class Room(ABC):
-    num: int = 0  # compteur statique
+# ==========================
+# Room model (ALIGNÉ AVEC LA DB)
+# ==========================
+class Room(Base):
+    __tablename__ = "room"
 
-    def __init__(self, price: float = 0.0):
-        self._price: float = price
-        Room.num += 1
-        self.num_room: Final[int] = Room.num
-        self._is_available: bool = True
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    number = Column(String, nullable=False, unique=True)
+    type = Column(String(50), nullable=False)
+    price = Column(Float, nullable=False)
+    status = Column(String(20), default="available")
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
 
-    @abstractmethod
-    def reserve(self, customer: 'Client', check_in: datetime, check_out: datetime) -> bool:
-        pass
+    reservations = relationship("Reservation", back_populates="room")
 
-    def release(self) -> None:
-        self._is_available = True
-
-    def is_available(self) -> bool:
-        return self._is_available
-
-    def __str__(self):
-        return f'{self.num_room:<10d}{self._price:10.2f}'
+    def __repr__(self):
+        return f"<Room(id={self.id}, number={self.number}, type={self.type}, price={self.price})>"
 
 
+# ==========================
+# Reservation model
+# ==========================
+class Reservation(Base):
+    __tablename__ = "reservation"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    client_id = Column(Integer, ForeignKey("client.id"), nullable=False)
+    room_id = Column(Integer, ForeignKey("room.id"), nullable=False)
+    check_in_date = Column(DateTime, nullable=False)
+    check_out_date = Column(DateTime, nullable=False)
+    status = Column(String(20), default="Confirmée")
+
+    client = relationship("Client", back_populates="reservations")
+    room = relationship("Room", back_populates="reservations")
+
+    def __repr__(self):
+        return f"<Reservation(id={self.id}, client_id={self.client_id}, room_id={self.room_id})>"
+
+
+# ==========================
+# Classes métier (SANS IMPACT DB)
+# ==========================
 class SingleRoom(Room):
-    def __init__(self, price: float = 50.0):
-        super().__init__(price)
-
-    def reserve(self, customer: 'Client', check_in: datetime, check_out: datetime) -> bool:
-        if self._is_available:
-            self._is_available = False
-            return True
-        return False
+    def __init__(self, number: str, price: float = 50.0):
+        super().__init__(
+            number=number,
+            type="single",
+            price=price,
+            status="available"
+        )
 
 
 class DoubleRoom(Room):
-    def __init__(self, price: float = 80.0):
-        super().__init__(price)
-
-    def reserve(self, customer: 'Client', check_in: datetime, check_out: datetime) -> bool:
-        if self._is_available:
-            self._is_available = False
-            return True
-        return False
+    def __init__(self, number: str, price: float = 80.0):
+        super().__init__(
+            number=number,
+            type="double",
+            price=price,
+            status="available"
+        )
 
 
 class SuiteRoom(Room):
-    def __init__(self, price: float = 150.0):
-        super().__init__(price)
-
-    def reserve(self, customer: 'Client', check_in: datetime, check_out: datetime) -> bool:
-        if self._is_available:
-            self._is_available = False
-            return True
-        return False
-
-
-class Client:
-    num: int = 0
-
-    def __init__(self, name: str, email: str):
-        Client.num += 1
-        self.id: Final[int] = Client.num
-        self.name: str = name
-        self.email: str = email
-
-
-class Reservation:
-    def __init__(self, client: Client, room: Room, check_in: datetime, check_out: datetime):
-        self.client = client
-        self.room = room
-        self.check_in = check_in
-        self.check_out = check_out
-        self.status = "Confirmée"
-
-    def __str__(self):
-        return f'{self.client.name} a réservé la chambre {self.room.num_room} du {self.check_in} au {self.check_out}'
+    def __init__(self, number: str, price: float = 150.0):
+        super().__init__(
+            number=number,
+            type="suite",
+            price=price,
+            status="available"
+        )
