@@ -1,0 +1,61 @@
+@CLIENT_URL=http://127.0.0.1:9090/clients/
+@ROOM_URL=http://127.0.0.1:9090/rooms/
+@RESERVATION_URL=http://127.0.0.1:9090/reservations/
+
+
+#################################################################
+### CLIENTS
+#################################################################
+
+### Get all clients
+GET {{CLIENT_URL}}
+
+### Create client
+POST {{CLIENT_URL}}
+Content-Type: application/json
+
+{
+  "name": "Fayssal",
+  "email": "fayssal@example.com",
+  "phone": "0612345678",
+  "address": "Ain Taoujdate, Maroc"
+}
+
+
+#################################################################
+### ROOMS
+#################################################################
+
+### Get all rooms
+GET {{ROOM_URL}}
+
+### Create room
+POST {{ROOM_URL}}
+Content-Type: application/json
+
+{
+  "room_number": "101",
+  "room_type": "single",
+  "price_per_night": 50.0
+}
+
+### Delete room by id
+DELETE {{ROOM_URL}}1
+
+#################################################################
+### RESERVATIONS
+#################################################################
+
+### Get all reservations
+GET {{RESERVATION_URL}}
+
+### Create reservation
+POST {{RESERVATION_URL}}
+Content-Type: application/json
+
+{
+  "client_id": 1,
+  "room_id": 1,
+  "check_in_date": "2026-01-05T14:00:00",
+  "check_out_date": "2026-01-10T11:00:00"
+}
