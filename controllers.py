@@ -118,28 +118,27 @@ def get_reservations():
             id=reservation.id,
             client_id=reservation.client_id,
             room_id=reservation.room_id,
-            check_in_date=reservation.check_in_date,
-            check_out_date=reservation.check_out_date,
-            status=reservation.status
+            check_in=reservation.check_in,
+            check_out=reservation.check_out,
+            #status="Confirmée"  # Statut par défaut
         ))
     return results
-
 
 @reservation_router.post("/", response_model=ReservationResponse)
 def create_reservation(reservationRequest: ReservationRequest):
     reservation = Reservation(
         client_id=reservationRequest.client_id,
         room_id=reservationRequest.room_id,
-        check_in_date=reservationRequest.check_in_date,
-        check_out_date=reservationRequest.check_out_date,
-        status="Confirmée"
+        check_in=reservationRequest.check_in,
+        check_out=reservationRequest.check_out,
     )
     service.create_reservation(reservation)
     return ReservationResponse(
         id=reservation.id,
         client_id=reservation.client_id,
         room_id=reservation.room_id,
-        check_in_date=reservation.check_in_date,
-        check_out_date=reservation.check_out_date,
-        status=reservation.status
+        check_in=reservation.check_in,
+        check_out=reservation.check_out
+        # status=reservation.status  # si tu l’as supprimé dans SQLAlchemy
     )
+
