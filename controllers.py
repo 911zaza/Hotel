@@ -155,6 +155,43 @@ def delete_room(id: int):
         return {"message": "Room deleted successfully"}
     raise HTTPException(status_code=404, detail="Room not found")
 
+@room_router.put("/{room_id}", response_model=RoomResponse)
+def update_room(room_id: int, roomRequest: RoomRequest):
+    updated_room = Room(
+        number=roomRequest.room_number,
+        type=roomRequest.room_type,
+        price=roomRequest.price_per_night,
+        status="available"
+    )
+    success = service.update_room(room_id, updated_room)
+    if not success:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    room = service.room_dao.session.query(Room).get(room_id)
+    return RoomResponse(
+        id=room.id,
+        room_number=room.number,
+        room_type=room.type,
+        price_per_night=room.price,
+        is_available=(room.status == "available")
+    )
+
+
+@room_router.get("/price-range/", response_model=list[RoomResponse])
+def get_rooms_by_price(min_price: float, max_price: float):
+    rooms = service.get_rooms_by_price_range(min_price, max_price)
+    return [
+        RoomResponse(
+            id=r.id,
+            room_number=r.number,
+            room_type=r.type,
+            price_per_night=r.price,
+            is_available=(r.status == "available")
+        ) for r in rooms
+    ]
+
+
+
 # ==========================
 # Reservations
 # ==========================
@@ -190,3 +227,29 @@ def create_reservation(reservationRequest: ReservationRequest):
         # status=reservation.status  # si tu l’as supprimé dans SQLAlchemy
     )
 
+@reservation_router.get("/client/{client_id}", response_model=list[ReservationResponse])
+def get_reservations_by_client(client_id: int):
+    reservations = service.find_reservations_by_id_client(client_id)
+    return [
+        ReservationResponse(
+            id=r.id,
+            client_id=r.client_id,
+            room_id=r.room_id,
+            check_in=r.check_in,
+            check_out=r.check_out
+        ) for r in reservations
+    ]
+
+
+@reservation_router.delete("/{reservation_id}/client/{client_id}")
+def cancel_reservation(reservation_id: int, client_id: int):
+    success = service.cancel_reservation_byid_client(reservation_id, client_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    return {"message": "Reservation cancelled successfully"}
+
+
+@reservation_router.get("/check-availability/")
+def check_room_availability(room_id: int, check_in: datetime, check_out: datetime):
+    available = service.check_room_availability(room_id, check_in, check_out)
+    return {"available": available}

@@ -1,4 +1,5 @@
 
+import datetime
 from sqlalchemy.orm import Session
 from models import Client, Room, Reservation
 from typing import Optional
@@ -80,6 +81,30 @@ class RoomDao:
             self.session.commit()
             return True
         return False
+    
+
+    def update_room(self, room_id: int, updated_room: Room) -> bool:
+        room = self.session.query(Room).filter(Room.id == room_id).one_or_none()
+        if not room:
+            return False
+        try:
+            room.number = updated_room.number
+            room.type = updated_room.type
+            room.price = updated_room.price
+            room.status = updated_room.status
+            self.session.commit()
+        except:
+            self.session.rollback()
+            return False
+        return True
+
+    def get_rooms_by_price_range(self, min_price: float, max_price: float):
+        return self.session.query(Room).filter(
+            Room.price >= min_price,
+            Room.price <= max_price
+        ).all()
+    
+
 
 class ReservationDao:
     def __init__(self, session: Session):
@@ -97,5 +122,37 @@ class ReservationDao:
 
     def get_all_reservations(self):
         return self.session.query(Reservation).all()
+    
+
+    def find_reservations_by_id_client(self, client_id: int):
+        return self.session.query(Reservation).filter(
+            Reservation.client_id == client_id
+        ).all()
+
+    def cancel_reservation_byid_client(self, reservation_id: int, client_id: int) -> bool:
+        reservation = self.session.query(Reservation).filter(
+            Reservation.id == reservation_id,
+            Reservation.client_id == client_id
+        ).one_or_none()
+
+        if not reservation:
+            return False
+
+        try:
+            self.session.delete(reservation)
+            self.session.commit()
+        except:
+            self.session.rollback()
+            return False
+        return True
+
+    def check_room_availability(self, room_id: int, check_in, check_out) -> bool:
+        conflict = self.session.query(Reservation).filter(
+            Reservation.room_id == room_id,
+            Reservation.check_in < check_out,
+            Reservation.check_out > check_in
+        ).first()
+
+        return conflict is None
 
 
