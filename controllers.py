@@ -10,7 +10,7 @@
    client         server      http request:                       Request or Response
        |   Request     |               - GET : Read                        - HEADER
        |   ----------->                - POST : Create                     - BODY (Payload)
-           <----------  |               - PUT : Update                      - STATUS CODE RESPONSE
+           <----------  |              - PUT : Update                      - STATUS CODE RESPONSE
        |    Response   |               - DELETE : Supprimer                 200-299 : OK
                                                                               300-399 : Redirection
                                                                               >= 400  : Error
