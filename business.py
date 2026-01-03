@@ -25,8 +25,11 @@ class Hotel:
     def delete_client(self, client_id: int) -> bool:
         return self.client_dao.delete_client(client_id)
     
+    def update_client(self, client_id: int, updated_client: Client) -> bool:
+        return self.client_dao.update_client(client_id, updated_client)
 
-    
+
+
     def create_room(self, room: Room):
         return self.room_dao.create_room(room)
 

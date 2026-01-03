@@ -10,7 +10,7 @@
    client         server      http request:                       Request or Response
        |   Request     |               - GET : Read                        - HEADER
        |   ----------->                - POST : Create                     - BODY (Payload)
-           <----------  |               - PUT : Update                      - STATUS CODE RESPONSE
+           <----------  |              - PUT : Update                      - STATUS CODE RESPONSE
        |    Response   |               - DELETE : Supprimer                 200-299 : OK
                                                                               300-399 : Redirection
                                                                               >= 400  : Error
@@ -87,6 +87,29 @@ def delete_client(client_id: int):
         # Si le client n'existe pas ou suppression échoue, renvoie une erreur 404
         raise HTTPException(status_code=404, detail=f"Client with id {client_id} not found")
     return {"message": f"Client with id {client_id} has been deleted"}
+
+
+@client_router.put("/{client_id}", response_model=ClientResponse)
+def update_client(client_id: int, client_request: ClientRequest):
+    updated_client = Client(
+        name=client_request.name,
+        email=client_request.email,
+        phone=client_request.phone,
+        address=client_request.address
+    )
+    success = service.update_client(client_id, updated_client)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Client with id {client_id} not found")
+
+    client = service.client_dao.find_by_id(client_id)
+    return ClientResponse(
+        id=client.id,
+        name=client.name,
+        email=client.email,
+        phone=client.phone,
+        address=client.address
+    )
+
 
 
 

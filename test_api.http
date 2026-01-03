@@ -22,6 +22,26 @@ Content-Type: application/json
   "address": "Agadir, Maroc"
 }
 
+### Delete client by ID
+DELETE {{CLIENT_URL}}6
+
+
+### Get client by ID
+GET {{CLIENT_URL}}5
+
+### modifier client by ID
+
+PUT {{CLIENT_URL}}1
+Content-Type: application/json
+
+{
+  "name": "Zakaria ",
+  "email": "Zakaria@example.com",
+  "phone": "0635946544",
+  "address": "Fes, Maroc"
+}
+
+
 #################################################################
 ### ROOMS
 #################################################################

@@ -37,6 +37,24 @@ class ClientDao:
             return False
         return True
     
+   
+    def update_client(self, client_id: int, updated_client: Client) -> bool:
+        client = self.find_by_id(client_id)
+        if not client:
+            return False
+        try:
+            client.name = updated_client.name
+            client.email = updated_client.email
+            client.phone = updated_client.phone
+            client.address = updated_client.address
+            self.session.commit()
+            self.session.refresh(client)
+        except :
+            self.session.rollback()
+            return False
+        return True
+
+
 class RoomDao:
     def __init__(self, session: Session):
         self.session = session
