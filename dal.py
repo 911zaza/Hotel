@@ -23,6 +23,20 @@ class ClientDao:
 
     def find_by_id(self, id: int) -> Optional[Client]:
         return self.session.query(Client).filter(Client.id == id).one_or_none()
+    
+
+    def delete_client(self, id: int) -> bool:
+        client = self.find_by_id(id)
+        if not client:
+            return False  # client introuvable
+        try:
+            self.session.delete(client)
+            self.session.commit()
+        except :
+            self.session.rollback()
+            return False
+        return True
+    
 class RoomDao:
     def __init__(self, session: Session):
         self.session = session

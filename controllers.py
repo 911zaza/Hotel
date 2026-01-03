@@ -65,6 +65,14 @@ def create_client(clientRequest: ClientRequest):
         address=client.address
     )
 
+@client_router.delete("/{client_id}", response_model=dict)
+def delete_client(client_id: int):
+    success = service.delete_client(client_id)
+    if not success:
+        # Si le client n'existe pas ou suppression échoue, renvoie une erreur 404
+        raise HTTPException(status_code=404, detail=f"Client with id {client_id} not found")
+    return {"message": f"Client with id {client_id} has been deleted"}
+
 # ==========================
 # Rooms
 # ==========================
