@@ -19,6 +19,14 @@ class Hotel:
     def list_all_clients(self):
         return self.client_dao.get_all_clients()
 
+    def get_client_by_id(self, client_id: int) :
+        return self.client_dao.find_by_id(client_id)
+    
+    def delete_client(self, client_id: int) -> bool:
+        return self.client_dao.delete_client(client_id)
+    
+
+    
     def create_room(self, room: Room):
         return self.room_dao.create_room(room)
 
