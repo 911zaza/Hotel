@@ -44,15 +44,14 @@ class RoomResponse(BaseModel):
 class ReservationRequest(BaseModel):
     client_id: int
     room_id: int
-    check_in_date: datetime
-    check_out_date: datetime
+    check_in: datetime
+    check_out: datetime
 
 class ReservationResponse(BaseModel):
     id: int
     client_id: int
     room_id: int
-    check_in_date: datetime
-    check_out_date: datetime
-    status: str
+    check_in: datetime
+    check_out: datetime
     created_at: datetime | None = None
     updated_at: datetime | None = None
