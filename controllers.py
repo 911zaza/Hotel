@@ -48,6 +48,21 @@ def get_clients():
     return results
 
 
+# Get client by ID
+@client_router.get("/{client_id}", response_model=ClientResponse)
+def get_client_by_id(client_id: int):
+    client = service.client_dao.find_by_id(client_id)
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return ClientResponse(
+        id=client.id,
+        name=client.name,
+        email=client.email,
+        phone=client.phone,
+        address=client.address
+    )
+
+
 @client_router.post("/", response_model=ClientResponse)
 def create_client(clientRequest: ClientRequest):
     client = Client(
@@ -72,6 +87,8 @@ def delete_client(client_id: int):
         # Si le client n'existe pas ou suppression échoue, renvoie une erreur 404
         raise HTTPException(status_code=404, detail=f"Client with id {client_id} not found")
     return {"message": f"Client with id {client_id} has been deleted"}
+
+
 
 # ==========================
 # Rooms
