@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogContent,
   Alert,
+  Container,
 } from "@mui/material";
 // Icons will be replaced with text for now - install @mui/icons-material to use icons
 import { getRooms, deleteRoom } from "../api/rooms";
@@ -76,7 +77,8 @@ export default function RoomsPage() {
   };
 
   return (
-    <Box>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h4" component="h1">
           Gestion des Chambres
@@ -171,7 +173,8 @@ export default function RoomsPage() {
           <RoomForm room={editingRoom} onSuccess={handleSuccess} onCancel={handleCloseDialog} />
         </DialogContent>
       </Dialog>
-    </Box>
+      </Box>
+    </Container>
   );
 }
 

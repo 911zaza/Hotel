@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogContent,
   Alert,
+  Container,
 } from "@mui/material";
 // Icons will be replaced with text for now - install @mui/icons-material to use icons
 import { getClients, deleteClient } from "../api/clients";
@@ -75,7 +76,8 @@ export default function ClientsPage() {
   };
 
   return (
-    <Box>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h4" component="h1">
           Gestion des Clients
@@ -158,6 +160,7 @@ export default function ClientsPage() {
           <ClientForm client={editingClient} onSuccess={handleSuccess} onCancel={handleCloseDialog} />
         </DialogContent>
       </Dialog>
-    </Box>
+      </Box>
+    </Container>
   );
 }

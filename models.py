@@ -1,8 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
+from config import Base
 
 # ==========================
 # Client model
@@ -66,3 +65,24 @@ class Reservation(Base):
 
     def __repr__(self):
         return f"<Reservation(id={self.id}, client_id={self.client_id}, room_id={self.room_id})>"
+
+
+# ==========================
+# User model
+# ==========================
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(50), unique=True, nullable=False, index=True)
+    email = Column(String(100), unique=True, nullable=False, index=True)
+    password_hash = Column(String(255), nullable=False)
+    role = Column(String(20), default="client")  # 'admin' or 'client'
+    name = Column(String(100))
+    phone = Column(String(15))
+    address = Column(String(200))
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
+
+    def __repr__(self):
+        return f"<User(id={self.id}, username={self.username}, email={self.email}, role={self.role})>"

@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import uvicorn
 from controllers import client_router, room_router, reservation_router
+from auth_controller import auth_router
 
 # Création de l'application FastAPI
 app = FastAPI(
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 # Inclusion des routers
+app.include_router(auth_router)
 app.include_router(client_router)
 app.include_router(room_router)
 app.include_router(reservation_router)

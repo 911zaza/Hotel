@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogContent,
   Alert,
+  Container,
 } from "@mui/material";
 // Icons will be replaced with text for now - install @mui/icons-material to use icons
 import { getReservations, cancelReservation } from "../api/reservations";
@@ -79,7 +80,8 @@ export default function ReservationsPage() {
   };
 
   return (
-    <Box>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
         <Typography variant="h4" component="h1">
           Gestion des Réservations
@@ -153,7 +155,8 @@ export default function ReservationsPage() {
           <ReservationForm onSuccess={handleSuccess} onCancel={handleCloseDialog} />
         </DialogContent>
       </Dialog>
-    </Box>
+      </Box>
+    </Container>
   );
 }
 
