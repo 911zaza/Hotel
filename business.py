@@ -1,5 +1,4 @@
-from entities import Client, Room, Reservation
-from models import Room
+from models import Client, Room, Reservation
 
 from dal import ClientDao, RoomDao, ReservationDao
 from config import Sessionlocal

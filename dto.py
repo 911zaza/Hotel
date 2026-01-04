@@ -55,3 +55,34 @@ class ReservationResponse(BaseModel):
     check_out: datetime
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+# ==========================
+# USER DTO
+# ==========================
+class UserRegisterRequest(BaseModel):
+    username: str = Field(..., min_length=3, max_length=50)
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+    name: str | None = Field(None, max_length=100)
+    phone: str | None = Field(None, max_length=15)
+    address: str | None = Field(None, max_length=200)
+
+class UserLoginRequest(BaseModel):
+    username: str
+    password: str
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    role: str
+    name: str | None = None
+    phone: str | None = None
+    address: str | None = None
+    created_at: datetime | None = None
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
