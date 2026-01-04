@@ -63,18 +63,18 @@ Content-Type: application/json
 DELETE {{ROOM_URL}}6
 
 ### update room by ID
-PUT {{ROOM_URL}}5
+PUT {{ROOM_URL}}8
 Content-Type: application/json
 
 {
-"room_number": "203",
+"room_number": "205",
 "room_type": "double",
 "price_per_night": 120.0
 }
 
 
 ###Get rooms by price range
-GET {{ROOM_URL}}price-range/?min_price=80&max_price=150
+GET {{ROOM_URL}}price-range/?min_price=200&max_price=500
 
 #################################################################
 ### RESERVATIONS
@@ -96,10 +96,10 @@ Content-Type: application/json
 
 
 ###Get reservations by client ID
-GET {{RESERVATION_URL}}client/6
+GET {{RESERVATION_URL}}client/2
 
 ###Cancel reservation by reservation ID and client ID
-DELETE {{RESERVATION_URL}}3/client/6
+DELETE {{RESERVATION_URL}}4/client/3
 
 ###Check room availability
-GET {{RESERVATION_URL}}check-availability/?room_id=7&check_in=2026-01-05T14:00:00&check_out=2026-01-10T11:00:00
+GET {{RESERVATION_URL}}check-availability/?room_id=1&check_in=2027-01-10T00:00:00&check_out=2027-01-12T00:00:00

@@ -1,6 +1,7 @@
 from business import Hotel
 from config import Base, Sessionlocal, engine
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import uvicorn
 from controllers import client_router, room_router, reservation_router
@@ -9,6 +10,15 @@ from controllers import client_router, room_router, reservation_router
 app = FastAPI(
     title="API Hotel Management",
     description="v1.0 - Gestion des clients, chambres et réservations"
+)
+
+# Configuration CORS pour permettre les requêtes depuis React
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # URL du frontend React
+    allow_credentials=True,
+    allow_methods=["*"],  # Permet tous les méthodes HTTP (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Permet tous les headers
 )
 
 # Inclusion des routers

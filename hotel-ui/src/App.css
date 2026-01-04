@@ -1,0 +1,53 @@
+.App {
+  text-align: center;
+}
+
+/* Ensure full height layout */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Material-UI theme customization */
+.MuiTableContainer-root {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.MuiPaper-root {
+  border-radius: 8px;
+}
+
+/* Smooth transitions */
+.MuiTableRow-root {
+  transition: background-color 0.2s ease;
+}
+
+/* Dialog styles */
+.MuiDialog-paper {
+  border-radius: 12px;
+}
+
+/* Form styles */
+.MuiTextField-root {
+  margin-bottom: 8px;
+}
+
+/* Button spacing */
+.MuiButton-root {
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .MuiContainer-root {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
