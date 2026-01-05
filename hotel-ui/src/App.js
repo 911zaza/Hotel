@@ -11,6 +11,8 @@ import RoomsPage from './pages/RoomsPage';
 import ClientsPage from './pages/ClientsPage';
 import ReservationsPage from './pages/ReservationsPage';
 import ExplorePage from './pages/ExplorePage';
+import RestaurantPage from './pages/RestaurantPage';
+import EvenementPage from './pages/EvenementPage';
 import ProfilePage from './pages/ProfilePage';
 import { isAuthenticated, isAdmin } from './utils/auth';
 
@@ -39,6 +41,8 @@ export default function App() {
               element={<PrivateRoute><ReservationsPage /></PrivateRoute>}
             />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/restaurant" element={<RestaurantPage />} />
+            <Route path="/evenements" element={<EvenementPage />} />
             <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
           </Routes>
         </Container>

@@ -72,6 +72,13 @@ class UserLoginRequest(BaseModel):
     username: str
     password: str
 
+
+class UserUpdateRequest(BaseModel):
+    name: str | None = Field(None, max_length=100)
+    email: EmailStr | None = None
+    phone: str | None = Field(None, min_length=8, max_length=15)
+    address: str | None = Field(None, min_length=5, max_length=200)
+
 class UserResponse(BaseModel):
     id: int
     username: str

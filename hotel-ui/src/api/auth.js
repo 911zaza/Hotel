@@ -6,6 +6,8 @@ export const login = (data) => api.post('/auth/login', data);
 
 export const getCurrentUser = () => api.get('/auth/me');
 
+export const updateCurrentUser = (data) => api.put('/auth/me', data);
+
 export const logout = async () => {
   try {
     await api.post('/auth/logout');

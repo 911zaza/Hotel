@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from config import Sessionlocal
 from auth_dal import UserDao, hash_password, verify_password
 from models import User
-from dto import UserRegisterRequest, UserLoginRequest, UserResponse, TokenResponse
+from dto import UserRegisterRequest, UserLoginRequest, UserResponse, TokenResponse, UserUpdateRequest
 from datetime import datetime, timedelta
 import secrets
 
@@ -27,19 +27,28 @@ def get_db():
         db.close()
 
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)) -> User:
-    """Récupère l'utilisateur actuel depuis le token"""
-    token = credentials.credentials
-    user_id = user_tokens.get(token)
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Token invalide")
-    
-    user_dao = UserDao(db)
-    user = user_dao.find_by_id(user_id)
-    if not user:
-        raise HTTPException(status_code=401, detail="Utilisateur non trouvé")
-    
-    return user
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)) -> User:
+    """Vérifie le token et retourne l'utilisateur actuel"""
+    try:
+        token = credentials.credentials if credentials else None
+        if not token:
+            raise HTTPException(status_code=401, detail="Token manquant")
+        
+        user_id = user_tokens.get(token)
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Token invalide ou expiré")
+        
+        user_dao = UserDao(db)
+        user = user_dao.find_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=401, detail="Utilisateur non trouvé")
+        
+        return user
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Erreur d'authentification: {str(e)}")
+        raise HTTPException(status_code=401, detail="Erreur d'authentification")
 
 
 @auth_router.post("/register", response_model=UserResponse)
@@ -116,7 +125,7 @@ def login(login_data: UserLoginRequest, db: Session = Depends(get_db)):
 
 
 @auth_router.get("/me", response_model=UserResponse)
-def get_current_user_info(current_user: User = Depends(get_current_user)):
+def get_current_user_info(current_user: User = Depends(verify_token)):
     """Récupère les informations de l'utilisateur connecté"""
     return UserResponse(
         id=current_user.id,
@@ -133,8 +142,35 @@ def get_current_user_info(current_user: User = Depends(get_current_user)):
 @auth_router.post("/logout")
 def logout(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Déconnexion de l'utilisateur"""
-    token = credentials.credentials
-    if token in user_tokens:
-        del user_tokens[token]
-    return {"message": "Déconnexion réussie"}
+    try:
+        token = credentials.credentials if credentials else None
+        if token and token in user_tokens:
+            del user_tokens[token]
+        return {"message": "Déconnexion réussie"}
+    except Exception as e:
+        print(f"Erreur lors de la déconnexion: {str(e)}")
+        return {"message": "Déconnexion"}
+
+
+@auth_router.put("/me", response_model=UserResponse)
+def update_current_user(update: UserUpdateRequest, current_user: User = Depends(verify_token), db: Session = Depends(get_db)):
+    """Met à jour les informations de l'utilisateur connecté"""
+    user_dao = UserDao(db)
+    data = update.dict(exclude_unset=True)
+    if not data:
+        raise HTTPException(status_code=400, detail="Aucune donnée fournie pour la mise à jour")
+    success = user_dao.update_user(current_user.id, data)
+    if not success:
+        raise HTTPException(status_code=500, detail="Échec de la mise à jour de l'utilisateur")
+    user = user_dao.find_by_id(current_user.id)
+    return UserResponse(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        role=user.role,
+        name=user.name,
+        phone=user.phone,
+        address=user.address,
+        created_at=user.created_at
+    )
 

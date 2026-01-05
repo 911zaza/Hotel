@@ -16,7 +16,6 @@
                                                                               >= 400  : Error
 """
 
-from datetime import timedelta
 from fastapi import APIRouter, HTTPException
 from business import Hotel
 from dto import *
@@ -403,18 +402,10 @@ def get_commande_date(date: datetime):
 # Créer un événement
 @evenement_router.post("/")
 def create_evenement(data: EvenementRequest):
-    duree = None
-    if data.duree_evenement:
-        if isinstance(data.duree_evenement, str):
-            h, m, s = map(int, data.duree_evenement.split(":"))
-            duree = timedelta(hours=h, minutes=m, seconds=s)
-        else:
-            duree = timedelta(hours=int(data.duree_evenement))  # si juste un nombre d'heures
-
     e = Evenement(
         nom_evenement=data.nom_evenement,
         date_evenement=data.date_evenement.date(),
-        duree_evenement=duree,
+        duree_evenement=data.duree_evenement,  # Keep as string
         prix_evenement=data.prix_evenement
     )
     service.create_evenement(e)
@@ -430,18 +421,10 @@ def delete_evenement(id_evenement: int):
 # Modifier un événement
 @evenement_router.put("/{id_evenement}")
 def update_evenement(id_evenement: int, data: EvenementRequest):
-    duree = None
-    if data.duree_evenement:
-        if isinstance(data.duree_evenement, str):
-            h, m, s = map(int, data.duree_evenement.split(":"))
-            duree = timedelta(hours=h, minutes=m, seconds=s)
-        else:
-            duree = timedelta(hours=int(data.duree_evenement))
-
     e = Evenement(
         nom_evenement=data.nom_evenement,
         date_evenement=data.date_evenement.date(),
-        duree_evenement=duree,
+        duree_evenement=data.duree_evenement,  # Keep as string
         prix_evenement=data.prix_evenement
     )
     if not service.update_evenement(id_evenement, e):
