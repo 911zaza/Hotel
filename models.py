@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKe
 from sqlalchemy.orm import relationship
 from config import Base
 from sqlalchemy import Boolean
-from sqlalchemy import Interval
 
 
 
@@ -144,7 +143,7 @@ class Evenement(Base):
     id_evenement = Column(Integer, primary_key=True, autoincrement=True)
     nom_evenement = Column(String(150), nullable=False)
     date_evenement = Column(Date, nullable=False)
-    duree_evenement = Column(Interval, nullable=True) # interval type in PostgreSQL
+    duree_evenement = Column(String, nullable=True) # interval type in PostgreSQL as string
     prix_evenement = Column(Float, nullable=False)
 
     created_at = Column(DateTime, default=datetime.now)

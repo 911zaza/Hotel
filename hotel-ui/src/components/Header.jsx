@@ -21,11 +21,15 @@ export default function Header() {
         </Box>
         <Box sx={{ flex: 1 }} />
         <Box sx={{ display: 'flex', gap: 1 }}>
-          {isAdmin() && <Button component={Link} to="/rooms" color="inherit">Chambres</Button>}
-          <Button component={Link} to="/explore" color="inherit">Explorer</Button>
+          <Button component={Link} to="/explore" color="inherit">Chambres</Button>
+          <Button component={Link} to="/restaurant" color="inherit">Restaurant</Button>
+          <Button component={Link} to="/evenements" color="inherit">Événements</Button>
+          {isAdmin() && <Button component={Link} to="/rooms" color="inherit">Gestion Chambres</Button>}
           {isAdmin() && (
             <Button component={Link} to="/clients" color="inherit">Clients</Button>
           )}
+          {isAuthenticated() && <Button component={Link} to="/reservations" color="inherit">Mes Réservations</Button>}
+          {isAuthenticated() && <Button component={Link} to="/profile" color="inherit">Profil</Button>}
         </Box>
         <Box sx={{ ml: 2 }}>
           {isAuthenticated() ? (

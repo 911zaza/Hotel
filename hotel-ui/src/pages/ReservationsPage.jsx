@@ -18,13 +18,18 @@ import {
 } from "@mui/material";
 // Icons will be replaced with text for now - install @mui/icons-material to use icons
 import { getReservations, cancelReservation } from "../api/reservations";
+import { getRooms } from "../api/rooms";
+import { getCurrentUser } from "../api/auth";
 import ReservationForm from "../components/ReservationForm";
+import { generateReservationPDF } from "../api/pdfGenerator";
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [rooms, setRooms] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   const loadReservations = async () => {
     try {
@@ -41,7 +46,31 @@ export default function ReservationsPage() {
 
   useEffect(() => {
     loadReservations();
+    loadRooms();
+    loadCurrentUser();
   }, []);
+
+  const loadRooms = async () => {
+    try {
+      const res = await getRooms();
+      const roomsMap = {};
+      res.data.forEach(room => {
+        roomsMap[room.id] = room;
+      });
+      setRooms(roomsMap);
+    } catch (err) {
+      console.error("Erreur lors du chargement des chambres");
+    }
+  };
+
+  const loadCurrentUser = async () => {
+    try {
+      const res = await getCurrentUser();
+      setCurrentUser(res.data);
+    } catch (err) {
+      console.error("Erreur lors du chargement de l'utilisateur");
+    }
+  };
 
   const handleCancel = async (reservationId, clientId) => {
     if (window.confirm("Êtes-vous sûr de vouloir annuler cette réservation ?")) {
@@ -51,6 +80,13 @@ export default function ReservationsPage() {
       } catch (err) {
         setError("Erreur lors de l'annulation: " + (err.response?.data?.detail || err.message));
       }
+    }
+  };
+
+  const handleDownloadPDF = (reservation) => {
+    const room = rooms[reservation.room_id];
+    if (room && currentUser) {
+      generateReservationPDF(reservation, currentUser, room);
     }
   };
 
@@ -132,6 +168,15 @@ export default function ReservationsPage() {
                     <TableCell>{formatDate(reservation.check_in)}</TableCell>
                     <TableCell>{formatDate(reservation.check_out)}</TableCell>
                     <TableCell align="right">
+                      <Button
+                        color="primary"
+                        onClick={() => handleDownloadPDF(reservation)}
+                        size="small"
+                        variant="contained"
+                        sx={{ mr: 1 }}
+                      >
+                        PDF
+                      </Button>
                       <Button
                         color="error"
                         onClick={() => handleCancel(reservation.id, reservation.client_id)}
