@@ -86,3 +86,25 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
+
+
+# ==========================
+# PLAT DTO (Restaurant)
+# ==========================
+class PlatRequest(BaseModel):
+    nom_plat: str = Field(..., min_length=2, max_length=100)
+    type_plat: str = Field(..., min_length=3, max_length=50)
+    prix_plat: float = Field(..., gt=0)
+    ingredient_plat: str = Field(..., min_length=3)
+    disponibilite: bool = True
+
+
+class PlatResponse(BaseModel):
+    id: int
+    nom_plat: str
+    type_plat: str
+    prix_plat: float
+    ingredient_plat: str
+    disponibilite: bool
+    created_at: datetime | None = None
+    updated_at: datetime | None = None

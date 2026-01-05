@@ -6,12 +6,15 @@ from datetime import datetime
 import uvicorn
 from controllers import client_router, room_router, reservation_router
 from auth_controller import auth_router
+from controllers import plat_router
+
 
 # Création de l'application FastAPI
 app = FastAPI(
     title="API Hotel Management",
     description="v1.0 - Gestion des clients, chambres et réservations"
 )
+
 
 # Configuration CORS pour permettre les requêtes depuis React
 app.add_middleware(
@@ -35,6 +38,9 @@ def now():
         "message": "Hello from FastAPI Hotel",
         "date": datetime.now()
     }
+
+app.include_router(plat_router)
+
 
 # Création des tables une seule fois
 def init_db():

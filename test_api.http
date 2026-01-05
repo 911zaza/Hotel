@@ -103,3 +103,41 @@ DELETE {{RESERVATION_URL}}4/client/3
 
 ###Check room availability
 GET {{RESERVATION_URL}}check-availability/?room_id=1&check_in=2027-01-10T00:00:00&check_out=2027-01-12T00:00:00
+
+
+
+@PLAT_URL=http://127.0.0.1:9090/plats/
+
+#################################################################
+### PLATS (RESTAURANT)
+#################################################################
+
+### Get all plats
+GET {{PLAT_URL}}
+
+### Create plat
+POST {{PLAT_URL}}
+Content-Type: application/json
+
+{
+  "nom_plat": "Pizza Margherita",
+  "type_plat": "plat_principal",
+  "prix_plat": 45.0,
+  "ingredient_plat": "Tomate, fromage, basilic",
+  "disponibilite": true
+}
+
+### Update plat
+PUT {{PLAT_URL}}1
+Content-Type: application/json
+
+{
+  "nom_plat": "Pizza 4 Fromages",
+  "type_plat": "plat_principal",
+  "prix_plat": 55.0,
+  "ingredient_plat": "Mozzarella, gorgonzola, emmental, parmesan",
+  "disponibilite": true
+}
+
+### Delete plat
+DELETE {{PLAT_URL}}1

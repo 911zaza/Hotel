@@ -27,6 +27,7 @@ from models import *
 client_router = APIRouter(prefix="/clients")
 room_router = APIRouter(prefix="/rooms")
 reservation_router = APIRouter(prefix="/reservations")
+plat_router = APIRouter(prefix="/plats")
 
 # Service métier
 service: Hotel = Hotel()
@@ -253,3 +254,60 @@ def cancel_reservation(reservation_id: int, client_id: int):
 def check_room_availability(room_id: int, check_in: datetime, check_out: datetime):
     available = service.check_room_availability(room_id, check_in, check_out)
     return {"available": available}
+
+
+# ==========================
+# Plats (Restaurant)
+# ==========================
+@plat_router.get("/", response_model=list[PlatResponse])
+def get_plats():
+    return [
+        PlatResponse(
+            id=p.id,
+            nom_plat=p.nom_plat,
+            type_plat=p.type_plat,
+            prix_plat=p.prix_plat,
+            ingredient_plat=p.ingredient_plat,
+            disponibilite=p.disponibilite
+        ) for p in service.list_all_plats()
+    ]
+
+
+@plat_router.post("/", response_model=PlatResponse)
+def create_plat(platRequest: PlatRequest):
+    plat = Plat(**platRequest.dict())
+    service.create_plat(plat)
+    return PlatResponse(
+        id=plat.id,
+        nom_plat=plat.nom_plat,
+        type_plat=plat.type_plat,
+        prix_plat=plat.prix_plat,
+        ingredient_plat=plat.ingredient_plat,
+        disponibilite=plat.disponibilite
+    )
+
+
+@plat_router.put("/{plat_id}", response_model=PlatResponse)
+def update_plat(plat_id: int, platRequest: PlatRequest):
+    plat = Plat(**platRequest.dict())
+    success = service.update_plat(plat_id, plat)
+    if not success:
+        raise HTTPException(status_code=404, detail="Plat not found")
+
+    updated = service.plat_dao.find_by_id(plat_id)
+    return PlatResponse(
+        id=updated.id,
+        nom_plat=updated.nom_plat,
+        type_plat=updated.type_plat,
+        prix_plat=updated.prix_plat,
+        ingredient_plat=updated.ingredient_plat,
+        disponibilite=updated.disponibilite
+    )
+
+
+@plat_router.delete("/{plat_id}")
+def delete_plat(plat_id: int):
+    if not service.delete_plat(plat_id):
+        raise HTTPException(status_code=404, detail="Plat not found")
+    return {"message": "Plat supprimé avec succès"}
+
