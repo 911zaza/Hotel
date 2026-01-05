@@ -1,13 +1,11 @@
-import axios from "axios";
+import api from './client';
 
-const CLIENT_URL = "http://127.0.0.1:9090/clients/";
+export const getClients = () => api.get('/clients/');
 
-export const getClients = () => axios.get(CLIENT_URL);
+export const getClientById = (id) => api.get(`/clients/${id}`);
 
-export const getClientById = (id) => axios.get(CLIENT_URL + id);
+export const createClient = (data) => api.post('/clients/', data);
 
-export const createClient = (data) => axios.post(CLIENT_URL, data);
+export const updateClient = (id, data) => api.put(`/clients/${id}`, data);
 
-export const updateClient = (id, data) => axios.put(CLIENT_URL + id, data);
-
-export const deleteClient = (id) => axios.delete(CLIENT_URL + id);
+export const deleteClient = (id) => api.delete(`/clients/${id}`);

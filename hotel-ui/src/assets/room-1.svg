@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#eceff1" />
+  <g transform="translate(40,60)">
+    <rect width="720" height="380" rx="12" fill="#ffffff" stroke="#e0e0e0" />
+    <text x="360" y="190" font-family="Inter,Arial" font-size="32" text-anchor="middle" fill="#607d8b">Photo Chambre — 1</text>
+  </g>
+</svg>
