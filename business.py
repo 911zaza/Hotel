@@ -2,6 +2,9 @@ from models import Client, Room, Reservation
 
 from dal import ClientDao, RoomDao, ReservationDao
 from config import Sessionlocal
+from models import Plat
+from dal import PlatDao
+
 
 
 class Hotel:
@@ -11,6 +14,8 @@ class Hotel:
         self.client_dao = ClientDao(session)
         self.room_dao = RoomDao(session)
         self.reservation_dao = ReservationDao(session)
+        self.plat_dao = PlatDao(session)
+
 
     def create_client(self, client: Client):
         return self.client_dao.create_client(client)
@@ -63,3 +68,16 @@ class Hotel:
 
     def check_room_availability(self, room_id: int, check_in, check_out) -> bool:
         return self.reservation_dao.check_room_availability(room_id, check_in, check_out)
+    
+
+    def create_plat(self, plat: Plat):
+        return self.plat_dao.create_plat(plat)
+    
+    def list_all_plats(self):
+        return self.plat_dao.get_all_plats()
+
+    def delete_plat(self, plat_id: int):
+        return self.plat_dao.delete_plat(plat_id)
+
+    def update_plat(self, plat_id: int, plat: Plat):
+        return self.plat_dao.update_plat(plat_id, plat)

@@ -2,6 +2,8 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from config import Base
+from sqlalchemy import Boolean
+
 
 # ==========================
 # Client model
@@ -86,3 +88,23 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, email={self.email}, role={self.role})>"
+
+
+# ==========================
+# Plat model (Restaurant)
+# ==========================
+class Plat(Base):
+    __tablename__ = "plat"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nom_plat = Column(String(100), nullable=False)
+    type_plat = Column(String(50), nullable=False)
+    prix_plat = Column(Float, nullable=False)
+    ingredient_plat = Column(String, nullable=False)
+    disponibilite = Column(Boolean, default=True)
+
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)
+
+    def __repr__(self):
+        return f"<Plat(id={self.id}, nom_plat={self.nom_plat}, prix={self.prix_plat})>"

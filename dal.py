@@ -1,7 +1,7 @@
 
 import datetime
 from sqlalchemy.orm import Session
-from models import Client, Room, Reservation
+from models import Client, Plat, Room, Reservation
 from typing import Optional
 
 
@@ -156,3 +156,53 @@ class ReservationDao:
         return conflict is None
 
 
+# ==========================
+# Plat DAO
+# ==========================
+class PlatDao:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def create_plat(self, plat: Plat):
+        self.session.add(plat)
+        try:
+            self.session.commit()
+            self.session.refresh(plat)
+        except:
+            self.session.rollback()
+            return False
+        return True
+
+    def get_all_plats(self):
+        return self.session.query(Plat).all()
+
+    def find_by_id(self, plat_id: int):
+        return self.session.query(Plat).filter(Plat.id == plat_id).one_or_none()
+
+    def delete_plat(self, plat_id: int) -> bool:
+        plat = self.find_by_id(plat_id)
+        if not plat:
+            return False
+        try:
+            self.session.delete(plat)
+            self.session.commit()
+        except:
+            self.session.rollback()
+            return False
+        return True
+
+    def update_plat(self, plat_id: int, updated_plat: Plat) -> bool:
+        plat = self.find_by_id(plat_id)
+        if not plat:
+            return False
+        try:
+            plat.nom_plat = updated_plat.nom_plat
+            plat.type_plat = updated_plat.type_plat
+            plat.prix_plat = updated_plat.prix_plat
+            plat.ingredient_plat = updated_plat.ingredient_plat
+            plat.disponibilite = updated_plat.disponibilite
+            self.session.commit()
+        except:
+            self.session.rollback()
+            return False
+        return True
