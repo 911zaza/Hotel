@@ -38,6 +38,7 @@ class Room(Base):
     type = Column(String(50), nullable=False)
     price = Column(Float, nullable=False)
     status = Column(String(20), default="available")
+    url_image_chambre = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
 
@@ -85,6 +86,7 @@ class User(Base):
     name = Column(String(100))
     phone = Column(String(15))
     address = Column(String(200))
+    url_image_user = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
 

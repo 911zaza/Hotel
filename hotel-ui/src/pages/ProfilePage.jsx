@@ -11,9 +11,12 @@ import {
   Avatar,
   Grid,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout, updateCurrentUser } from "../api/auth";
+import { uploadProfileImage } from "../api/images";
+import fallbackAvatar from "../assets/logo.svg";
 import { setAuth } from "../utils/auth";
 
 export default function ProfilePage() {
@@ -28,9 +31,11 @@ export default function ProfilePage() {
     address: "",
     phone: "",
     password: "",
+    url_image_user: "",
   });
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const formatError = (err) => {
     if (!err) return "";
@@ -79,6 +84,7 @@ export default function ProfilePage() {
         address: res.data.address || "",
         phone: res.data.phone || "",
         password: "",
+        url_image_user: res.data.url_image_user || "",
       });
     } catch (err) {
       console.error('Erreur loadUser:', err);
@@ -90,6 +96,32 @@ export default function ProfilePage() {
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError("");
+    setSuccess("");
+    setUploadingImage(true);
+
+    try {
+      const res = await uploadProfileImage(file);
+      const newImageUrl = res.data.image_url;
+      
+      // Mettre à jour le formulaire avec la nouvelle URL
+      setForm({ ...form, url_image_user: newImageUrl });
+      setUser({ ...user, url_image_user: newImageUrl });
+      
+      setSuccess("Image de profil mise à jour avec succès!");
+    } catch (err) {
+      setError(formatError(err) || "Erreur lors de l'upload de l'image");
+    } finally {
+      setUploadingImage(false);
+      // Réinitialiser l'input file
+      e.target.value = "";
+    }
+  };
 
   const handleSave = async () => {
     setError("");
@@ -120,6 +152,7 @@ export default function ProfilePage() {
         email: form.email,
         phone: phoneToSend,
         address: form.address,
+        url_image_user: form.url_image_user || null,
       });
 
       const refreshed = await getCurrentUser();
@@ -158,7 +191,18 @@ export default function ProfilePage() {
         <CardContent>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
-              <Avatar sx={{ width: 72, height: 72 }}>{(user?.name || user?.username || "").charAt(0)}</Avatar>
+              <Avatar
+                sx={{ width: 88, height: 88 }}
+                src={form.url_image_user || user?.url_image_user || fallbackAvatar}
+                imgProps={{
+                  onError: (e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = fallbackAvatar;
+                  },
+                }}
+              >
+                {(user?.name || user?.username || "").charAt(0)}
+              </Avatar>
             </Grid>
             <Grid item xs>
               <Typography variant="h6">{user?.name || user?.username}</Typography>
@@ -175,6 +219,7 @@ export default function ProfilePage() {
                   address: user.address || "",
                   phone: user.phone || "",
                   password: "",
+                  url_image_user: user.url_image_user || "",
                 }); setError(''); setSuccess(''); }}>
                   Annuler
                 </Button>
@@ -201,6 +246,38 @@ export default function ProfilePage() {
               <Grid item xs={12}>
                 <TextField fullWidth label="Adresse" name="address" value={form.address} onChange={handleChange} disabled={!editing} />
               </Grid>
+              {editing && (
+                <Grid item xs={12}>
+                  <Box sx={{ border: "1px solid #ddd", borderRadius: 1, p: 2 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>Photo de profil</Typography>
+                    <Button
+                      variant="outlined"
+                      component="label"
+                      disabled={uploadingImage}
+                    >
+                      {uploadingImage ? <CircularProgress size={24} /> : "Choisir une image"}
+                      <input
+                        hidden
+                        accept="image/*"
+                        type="file"
+                        onChange={handleImageUpload}
+                        disabled={uploadingImage}
+                      />
+                    </Button>
+                    {form.url_image_user && (
+                      <Box sx={{ mt: 2 }}>
+                        <Box
+                          component="img"
+                          src={form.url_image_user}
+                          alt="Aperçu profil"
+                          sx={{ maxWidth: "100%", height: "auto", maxHeight: 200, borderRadius: 1 }}
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackAvatar; }}
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                </Grid>
+              )}
               {editing && (
                 <>
                   <Grid item xs={12} sm={6}>

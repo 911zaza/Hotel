@@ -35,13 +35,13 @@ GET {{CLIENT_URL}}5
 
 ### modifier client by ID
 
-PUT {{CLIENT_URL}}1
+PUT {{CLIENT_URL}}4
 Content-Type: application/json
 
 {
-  "name": "Zakaria ",
-  "email": "Zakaria@example.com",
-  "phone": "0635946544",
+  "name": "Walid ",
+  "email": "walid@example.com",
+  "phone": "0635678452",
   "address": "Fes, Maroc"
 }
 

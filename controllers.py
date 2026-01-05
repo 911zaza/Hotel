@@ -16,10 +16,15 @@
                                                                               >= 400  : Error
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
+from config import Sessionlocal
 from business import Hotel
 from dto import *
 from models import *
+from image_utils import save_room_image, delete_image_file
+from auth_controller import verify_token
 
 # ==========================
 # Routers
@@ -33,6 +38,31 @@ evenement_router = APIRouter(prefix="/evenements")
 
 # Service métier
 service: Hotel = Hotel()
+
+def get_db():
+    db = Sessionlocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# ==========================
+# Room Image Upload
+# ==========================
+@room_router.post("/upload-image")
+def upload_room_image(file: UploadFile = File(...), current_user: User = Depends(verify_token), db: Session = Depends(get_db)):
+    """Upload une image de chambre et retourne l'URL (admin seulement)"""
+    # Vérifier que c'est un admin
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Seuls les admins peuvent uploader des images")
+    
+    # Sauvegarder l'image
+    image_url = save_room_image(file)
+    
+    return {
+        "image_url": image_url,
+        "message": "Image de chambre sauvegardée avec succès"
+    }
 
 # ==========================
 # Clients
@@ -128,7 +158,8 @@ def get_rooms():
             room_number=room.number,                     # number
             room_type=room.type,                         # type
             price_per_night=room.price,                 # price
-            is_available=(room.status == "available")  # status -> bool
+            is_available=(room.status == "available"),  # status -> bool
+            image_url=room.url_image_chambre             # image URL from database
         ))
     return results
 
@@ -139,7 +170,8 @@ def create_room(roomRequest: RoomRequest):
         number=roomRequest.room_number,
         type=roomRequest.room_type,
         price=roomRequest.price_per_night,
-        status="available"
+        status="available",
+        url_image_chambre=roomRequest.image_url  # map DTO field to model column
     )
     service.create_room(room)
     return RoomResponse(
@@ -147,7 +179,8 @@ def create_room(roomRequest: RoomRequest):
         room_number=room.number,
         room_type=room.type,
         price_per_night=room.price,
-        is_available=(room.status == "available")
+        is_available=(room.status == "available"),
+        image_url=room.url_image_chambre
     )
 
 
@@ -164,7 +197,8 @@ def update_room(room_id: int, roomRequest: RoomRequest):
         number=roomRequest.room_number,
         type=roomRequest.room_type,
         price=roomRequest.price_per_night,
-        status="available"
+        status="available",
+        url_image_chambre=roomRequest.image_url  # map DTO field to model column
     )
     success = service.update_room(room_id, updated_room)
     if not success:
@@ -176,7 +210,8 @@ def update_room(room_id: int, roomRequest: RoomRequest):
         room_number=room.number,
         room_type=room.type,
         price_per_night=room.price,
-        is_available=(room.status == "available")
+        is_available=(room.status == "available"),
+        image_url=room.url_image_chambre
     )
 
 
@@ -189,7 +224,8 @@ def get_rooms_by_price(min_price: float, max_price: float):
             room_number=r.number,
             room_type=r.type,
             price_per_night=r.price,
-            is_available=(r.status == "available")
+            is_available=(r.status == "available"),
+            image_url=r.url_image_chambre
         ) for r in rooms
     ]
 

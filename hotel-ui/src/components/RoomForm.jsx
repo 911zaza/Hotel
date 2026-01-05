@@ -6,17 +6,22 @@ import {
   MenuItem,
   Grid,
   Alert,
+  CircularProgress,
+  Typography,
 } from "@mui/material";
 import { createRoom, updateRoom } from "../api/rooms";
+import { uploadRoomImage } from "../api/images";
 
 export default function RoomForm({ room, onSuccess, onCancel }) {
   const [form, setForm] = useState({
     room_number: "",
     room_type: "single",
     price_per_night: "",
+    image_url: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     if (room) {
@@ -24,6 +29,7 @@ export default function RoomForm({ room, onSuccess, onCancel }) {
         room_number: room.room_number || "",
         room_type: room.room_type || "single",
         price_per_night: room.price_per_night || "",
+        image_url: room.image_url || "",
       });
     }
   }, [room]);
@@ -31,6 +37,31 @@ export default function RoomForm({ room, onSuccess, onCancel }) {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError("");
+    setUploadingImage(true);
+
+    try {
+      const res = await uploadRoomImage(file);
+      const newImageUrl = res.data.image_url;
+      setForm({ ...form, image_url: newImageUrl });
+    } catch (err) {
+      setError(
+        err.response?.data?.detail
+          ? Array.isArray(err.response.data.detail)
+            ? err.response.data.detail.map((e) => e.msg).join(", ")
+            : err.response.data.detail
+          : err.message || "Erreur lors de l'upload de l'image"
+      );
+    } finally {
+      setUploadingImage(false);
+      e.target.value = "";
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -43,6 +74,7 @@ export default function RoomForm({ room, onSuccess, onCancel }) {
         room_number: form.room_number,
         room_type: form.room_type,
         price_per_night: parseFloat(form.price_per_night),
+        image_url: form.image_url || null,
       };
 
       if (room) {
@@ -51,7 +83,7 @@ export default function RoomForm({ room, onSuccess, onCancel }) {
         await createRoom(data);
       }
 
-      setForm({ room_number: "", room_type: "single", price_per_night: "" });
+      setForm({ room_number: "", room_type: "single", price_per_night: "", image_url: "" });
       onSuccess();
     } catch (err) {
       setError(
@@ -114,6 +146,37 @@ export default function RoomForm({ room, onSuccess, onCancel }) {
             required
             inputProps={{ min: 0, step: 0.01 }}
           />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Box sx={{ border: "1px solid #ddd", borderRadius: 1, p: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>Image de la chambre</Typography>
+            <Button
+              variant="outlined"
+              component="label"
+              disabled={uploadingImage}
+            >
+              {uploadingImage ? <CircularProgress size={24} /> : "Choisir une image"}
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageUpload}
+                disabled={uploadingImage}
+              />
+            </Button>
+            {form.image_url && (
+              <Box sx={{ mt: 2 }}>
+                <Box
+                  component="img"
+                  src={form.image_url}
+                  alt="Aperçu chambre"
+                  sx={{ maxWidth: "100%", height: "auto", maxHeight: 200, borderRadius: 1 }}
+                  onError={(e) => console.error("Image non valide:", e)}
+                />
+              </Box>
+            )}
+          </Box>
         </Grid>
 
         <Grid item xs={12}>
