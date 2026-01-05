@@ -24,8 +24,12 @@ export const isAdmin = () => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/login";
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+};
+
+export const setAuth = ({ token, user }) => {
+  if (token) localStorage.setItem('token', token);
+  if (user) localStorage.setItem('user', JSON.stringify(user));
 };
 

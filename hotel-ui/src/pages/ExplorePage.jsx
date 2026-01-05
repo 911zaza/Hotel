@@ -19,6 +19,9 @@ import {
 } from "@mui/material";
 // Using emojis instead of icons
 import { getRooms } from "../api/rooms";
+import room1 from '../assets/room-1.svg';
+import room2 from '../assets/room-2.svg';
+import room3 from '../assets/room-3.svg';
 import { useNavigate } from "react-router-dom";
 
 export default function ExplorePage() {
@@ -79,9 +82,9 @@ export default function ExplorePage() {
 
   const getRoomImage = (roomType) => {
     const images = {
-      single: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600",
-      double: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600",
-      suite: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600",
+      single: room1,
+      double: room2,
+      suite: room3,
     };
     return images[roomType] || images.single;
   };

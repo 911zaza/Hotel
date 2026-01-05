@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../api/auth";
+import { setAuth } from "../utils/auth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -48,9 +49,7 @@ export default function LoginPage() {
       const response = await login(form);
       
       // Sauvegarder le token et les informations utilisateur
-      localStorage.setItem("token", response.data.access_token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      
+      setAuth({ token: response.data.access_token, user: response.data.user });
       // Redirection selon le rôle
       if (response.data.user.role === "admin") {
         navigate("/clients");

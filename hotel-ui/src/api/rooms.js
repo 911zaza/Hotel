@@ -1,14 +1,12 @@
-import axios from "axios";
+import api from './client';
 
-const ROOM_URL = "http://127.0.0.1:9090/rooms/";
+export const getRooms = () => api.get('/rooms/');
 
-export const getRooms = () => axios.get(ROOM_URL);
+export const createRoom = (data) => api.post('/rooms/', data);
 
-export const createRoom = (data) => axios.post(ROOM_URL, data);
+export const updateRoom = (id, data) => api.put(`/rooms/${id}`, data);
 
-export const updateRoom = (id, data) => axios.put(ROOM_URL + id, data);
-
-export const deleteRoom = (id) => axios.delete(ROOM_URL + id);
+export const deleteRoom = (id) => api.delete(`/rooms/${id}`);
 
 export const getRoomsByPrice = (min, max) =>
-    axios.get(`${ROOM_URL}price-range/?min_price=${min}&max_price=${max}`);
+    api.get(`/rooms/price-range/?min_price=${min}&max_price=${max}`);
