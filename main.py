@@ -2,8 +2,10 @@ from business import Hotel
 from config import Base, Sessionlocal, engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 import uvicorn
+import os
 from controllers import client_router, room_router, reservation_router
 from auth_controller import auth_router
 from controllers import plat_router
@@ -25,6 +27,11 @@ app.add_middleware(
     allow_methods=["*"],  # Permet tous les méthodes HTTP (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Permet tous les headers
 )
+
+# Configuration des fichiers statiques (images)
+images_dir = os.path.join(os.path.dirname(__file__), "images")
+if os.path.exists(images_dir):
+    app.mount("/images", StaticFiles(directory=images_dir), name="images")
 
 # Inclusion des routers
 app.include_router(auth_router)

@@ -1,13 +1,14 @@
 """
 Auth Controller - Gestion de l'authentification
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from config import Sessionlocal
 from auth_dal import UserDao, hash_password, verify_password
 from models import User
 from dto import UserRegisterRequest, UserLoginRequest, UserResponse, TokenResponse, UserUpdateRequest
+from image_utils import save_profile_image, delete_image_file
 from datetime import datetime, timedelta
 import secrets
 
@@ -86,6 +87,7 @@ def register(user_data: UserRegisterRequest, db: Session = Depends(get_db)):
         name=new_user.name,
         phone=new_user.phone,
         address=new_user.address,
+        url_image_user=new_user.url_image_user,
         created_at=new_user.created_at
     )
 
@@ -119,6 +121,7 @@ def login(login_data: UserLoginRequest, db: Session = Depends(get_db)):
             name=user.name,
             phone=user.phone,
             address=user.address,
+            url_image_user=user.url_image_user,
             created_at=user.created_at
         )
     )
@@ -135,6 +138,7 @@ def get_current_user_info(current_user: User = Depends(verify_token)):
         name=current_user.name,
         phone=current_user.phone,
         address=current_user.address,
+        url_image_user=current_user.url_image_user,
         created_at=current_user.created_at
     )
 
@@ -171,6 +175,31 @@ def update_current_user(update: UserUpdateRequest, current_user: User = Depends(
         name=user.name,
         phone=user.phone,
         address=user.address,
+        url_image_user=user.url_image_user,
         created_at=user.created_at
     )
+
+
+@auth_router.post("/upload-profile-image")
+def upload_profile_image(file: UploadFile = File(...), current_user: User = Depends(verify_token), db: Session = Depends(get_db)):
+    """Upload une image de profil et retourne l'URL"""
+    # Sauvegarder l'image
+    image_url = save_profile_image(file)
+    
+    # Supprimer l'ancienne image si elle existe
+    if current_user.url_image_user:
+        delete_image_file(current_user.url_image_user)
+    
+    # Mettre à jour la base de données
+    user_dao = UserDao(db)
+    success = user_dao.update_user(current_user.id, {"url_image_user": image_url})
+    
+    if not success:
+        delete_image_file(image_url)  # Nettoyer en cas d'erreur
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du profil")
+    
+    return {
+        "image_url": image_url,
+        "message": "Image de profil mise à jour avec succès"
+    }
 

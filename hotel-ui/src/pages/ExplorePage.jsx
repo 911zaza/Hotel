@@ -78,27 +78,14 @@ export default function ExplorePage() {
     navigate("/reservations");
   };
 
-  // Returns an image URL for a given room (varies by room id for diversity)
-  const getRoomImage = (roomType, room) => {
-    const imagesByType = {
-      single: [
-        'https://images.unsplash.com/photo-1501117716987-c8e2b18b7b51?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80'
-      ],
-      double: [
-        'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1542317854-6e5b60b7a2f0?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?auto=format&fit=crop&w=1200&q=80'
-      ],
-      suite: [
-        'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1560449643-687d4f73c5b6?auto=format&fit=crop&w=1200&q=80',
-      ],
-    };
-    const arr = imagesByType[roomType] || imagesByType.single;
-    const idx = room && typeof room.id === 'number' ? (room.id % arr.length) : 0;
-    return arr[idx];
+  // Returns the image URL for a room (from database)
+  const getRoomImage = (room) => {
+    // Use image URL from database if available
+    if (room?.image_url && room.image_url.trim()) {
+      return room.image_url;
+    }
+    // Fallback to placeholder
+    return 'https://via.placeholder.com/400x300?text=Chambre+' + room?.room_number;
   };
 
   const getRoomTypeLabel = (type) => {
@@ -168,7 +155,7 @@ export default function ExplorePage() {
               >
                 <Box
                   component="img"
-                  src={getRoomImage(room.room_type, room)}
+                  src={getRoomImage(room)}
                   alt={`Chambre ${room.room_number}`}
                   sx={{ width: '100%', height: 200, objectFit: 'cover' }}
                 />
@@ -229,7 +216,7 @@ export default function ExplorePage() {
             <Box>
               <Box
                 component="img"
-                src={getRoomImage(selectedRoom.room_type, selectedRoom)}
+                src={getRoomImage(selectedRoom)}
                 alt={`Chambre ${selectedRoom.room_number}`}
                 sx={{
                   width: "100%",
