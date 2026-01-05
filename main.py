@@ -7,6 +7,7 @@ import uvicorn
 from controllers import client_router, room_router, reservation_router
 from auth_controller import auth_router
 from controllers import plat_router
+from controllers import commande_router, evenement_router
 
 
 # Création de l'application FastAPI
@@ -30,6 +31,9 @@ app.include_router(auth_router)
 app.include_router(client_router)
 app.include_router(room_router)
 app.include_router(reservation_router)
+app.include_router(commande_router)
+app.include_router(evenement_router)
+
 
 # Exemple de route simple pour tester
 @app.get("/date")

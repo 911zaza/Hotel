@@ -3,6 +3,9 @@ from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKe
 from sqlalchemy.orm import relationship
 from config import Base
 from sqlalchemy import Boolean
+from sqlalchemy import Interval
+
+
 
 
 # ==========================
@@ -108,3 +111,41 @@ class Plat(Base):
 
     def __repr__(self):
         return f"<Plat(id={self.id}, nom_plat={self.nom_plat}, prix={self.prix_plat})>"
+
+# ==========================
+# Commande Plat model
+# ==========================
+class CommandePlat(Base):
+    __tablename__ = "commande_plat"
+
+    id_commande = Column(Integer, primary_key=True, autoincrement=True)
+
+    id_client = Column(Integer, ForeignKey("client.id"), nullable=False)
+    id_plat = Column(Integer, ForeignKey("plat.id"), nullable=False)
+
+    nom_plat = Column(String(100), nullable=False)
+    nb_deplat = Column(Integer, nullable=False)
+
+    date_commande = Column(Date, nullable=False)
+    date_a_manger = Column(Date, nullable=False)
+
+    client = relationship("Client")
+    plat = relationship("Plat")
+
+
+
+
+# ==========================
+# Evenement model
+# ==========================
+class Evenement(Base):
+    __tablename__ = "evenement"
+
+    id_evenement = Column(Integer, primary_key=True, autoincrement=True)
+    nom_evenement = Column(String(150), nullable=False)
+    date_evenement = Column(Date, nullable=False)
+    duree_evenement = Column(Interval, nullable=True) # interval type in PostgreSQL
+    prix_evenement = Column(Float, nullable=False)
+
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, onupdate=datetime.now)

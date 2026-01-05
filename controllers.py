@@ -16,6 +16,7 @@
                                                                               >= 400  : Error
 """
 
+from datetime import timedelta
 from fastapi import APIRouter, HTTPException
 from business import Hotel
 from dto import *
@@ -28,6 +29,8 @@ client_router = APIRouter(prefix="/clients")
 room_router = APIRouter(prefix="/rooms")
 reservation_router = APIRouter(prefix="/reservations")
 plat_router = APIRouter(prefix="/plats")
+commande_router = APIRouter(prefix="/commandes")
+evenement_router = APIRouter(prefix="/evenements")
 
 # Service métier
 service: Hotel = Hotel()
@@ -311,3 +314,168 @@ def delete_plat(plat_id: int):
         raise HTTPException(status_code=404, detail="Plat not found")
     return {"message": "Plat supprimé avec succès"}
 
+
+
+# Créer une commande
+@commande_router.post("/")
+def create_commande(data: CommandePlatRequest):
+    c = CommandePlat(
+        id_client=data.id_client,
+        id_plat=data.id_plat,
+        nom_plat=data.nom_plat,
+        nb_deplat=data.nb_deplat,
+        date_commande=datetime.now().date(),
+        date_a_manger=data.date_a_manger.date()
+    )
+    service.create_commande_plat(c)
+    return {"message": "Commande ajoutée", "id_commande": c.id_commande}
+
+# Supprimer une commande
+@commande_router.delete("/{id_commande}")
+def delete_commande(id_commande: int):
+    if not service.delete_commande_plat(id_commande):
+        raise HTTPException(status_code=404, detail="Commande not found")
+    return {"message": "Commande supprimée"}
+
+# Modifier une commande
+@commande_router.put("/{id_commande}")
+def update_commande(id_commande: int, data: CommandePlatRequest):
+    c = CommandePlat(
+        id_client=data.id_client,
+        id_plat=data.id_plat,
+        nom_plat=data.nom_plat,
+        nb_deplat=data.nb_deplat,
+        date_a_manger=data.date_a_manger.date()
+    )
+    if not service.update_commande_plat(id_commande, c):
+        raise HTTPException(status_code=404, detail="Commande not found")
+    return {"message": "Commande modifiée"}
+
+# Récupérer toutes les commandes
+@commande_router.get("/", response_model=list[CommandePlatResponse])
+def get_all_commandes():
+    commandes = service.commande_dao.session.query(CommandePlat).all()
+    return [
+        CommandePlatResponse(
+            id_commande=c.id_commande,
+            client_id=c.id_client,
+            nom_plat=c.nom_plat,
+            nb_deplat=c.nb_deplat,
+            date_commande=c.date_commande,
+            date_a_manger=c.date_a_manger
+        ) for c in commandes
+    ]
+
+# Récupérer commandes par client
+@commande_router.get("/client/{client_id}", response_model=list[CommandePlatResponse])
+def get_commande_client(client_id: int):
+    commandes = service.get_commande_by_client(client_id)
+    return [
+        CommandePlatResponse(
+            id_commande=c.id_commande,
+            client_id=c.id_client,
+            nom_plat=c.nom_plat,
+            nb_deplat=c.nb_deplat,
+            date_commande=c.date_commande,
+            date_a_manger=c.date_a_manger
+        ) for c in commandes
+    ]
+
+# Récupérer commandes par date
+@commande_router.get("/date/", response_model=list[CommandePlatResponse])
+def get_commande_date(date: datetime):
+    commandes = service.get_commande_by_date(date.date())
+    return [
+        CommandePlatResponse(
+            id_commande=c.id_commande,
+            client_id=c.id_client,
+            nom_plat=c.nom_plat,
+            nb_deplat=c.nb_deplat,
+            date_commande=c.date_commande,
+            date_a_manger=c.date_a_manger
+        ) for c in commandes
+    ]
+
+
+
+
+
+# Créer un événement
+@evenement_router.post("/")
+def create_evenement(data: EvenementRequest):
+    duree = None
+    if data.duree_evenement:
+        if isinstance(data.duree_evenement, str):
+            h, m, s = map(int, data.duree_evenement.split(":"))
+            duree = timedelta(hours=h, minutes=m, seconds=s)
+        else:
+            duree = timedelta(hours=int(data.duree_evenement))  # si juste un nombre d'heures
+
+    e = Evenement(
+        nom_evenement=data.nom_evenement,
+        date_evenement=data.date_evenement.date(),
+        duree_evenement=duree,
+        prix_evenement=data.prix_evenement
+    )
+    service.create_evenement(e)
+    return {"message": "Evenement ajouté", "id_evenement": e.id_evenement}
+
+# Supprimer un événement
+@evenement_router.delete("/{id_evenement}")
+def delete_evenement(id_evenement: int):
+    if not service.delete_evenement(id_evenement):
+        raise HTTPException(status_code=404, detail="Evenement not found")
+    return {"message": "Evenement supprimé"}
+
+# Modifier un événement
+@evenement_router.put("/{id_evenement}")
+def update_evenement(id_evenement: int, data: EvenementRequest):
+    duree = None
+    if data.duree_evenement:
+        if isinstance(data.duree_evenement, str):
+            h, m, s = map(int, data.duree_evenement.split(":"))
+            duree = timedelta(hours=h, minutes=m, seconds=s)
+        else:
+            duree = timedelta(hours=int(data.duree_evenement))
+
+    e = Evenement(
+        nom_evenement=data.nom_evenement,
+        date_evenement=data.date_evenement.date(),
+        duree_evenement=duree,
+        prix_evenement=data.prix_evenement
+    )
+    if not service.update_evenement(id_evenement, e):
+        raise HTTPException(status_code=404, detail="Evenement not found")
+    return {"message": "Evenement modifié"}
+
+# Récupérer tous les événements
+@evenement_router.get("/", response_model=list[EvenementResponse])
+def get_evenements():
+    events = service.evenement_dao.session.query(Evenement).all()
+    return [
+        EvenementResponse(
+            id_evenement=e.id_evenement,
+            nom_evenement=e.nom_evenement,
+            date_evenement=e.date_evenement,
+            duree_evenement=str(e.duree_evenement) if e.duree_evenement else None,
+            prix_evenement=float(e.prix_evenement),
+            created_at=e.created_at,
+            updated_at=e.updated_at
+        ) for e in events
+    ]
+
+# Récupérer un événement par ID
+@evenement_router.get("/{id_evenement}", response_model=EvenementResponse)
+def get_evenement(id_evenement: int):
+    e = service.get_evenement_by_id(id_evenement)
+    if not e:
+        raise HTTPException(status_code=404, detail="Evenement not found")
+    return EvenementResponse(
+        id_evenement=e.id_evenement,
+        nom_evenement=e.nom_evenement,
+        date_evenement=e.date_evenement,
+        duree_evenement=str(e.duree_evenement) if e.duree_evenement else None,
+        prix_evenement=float(e.prix_evenement),
+        created_at=e.created_at,
+        updated_at=e.updated_at
+    )

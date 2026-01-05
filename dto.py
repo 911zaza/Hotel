@@ -108,3 +108,43 @@ class PlatResponse(BaseModel):
     disponibilite: bool
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+# ==========================
+# COMMANDE PLAT DTO
+# ==========================
+class CommandePlatRequest(BaseModel):
+    id_client: int
+    id_plat: int
+    nom_plat: str
+    nb_deplat: int = Field(..., gt=0)
+    date_a_manger: datetime
+
+
+class CommandePlatResponse(BaseModel):
+    id_commande: int
+    client_id: int
+    nom_plat: str
+    nb_deplat: int
+    date_commande: datetime
+    date_a_manger: datetime
+
+
+# ==========================
+# EVENEMENT DTO
+# ==========================
+class EvenementRequest(BaseModel):
+    nom_evenement: str
+    date_evenement: datetime
+    duree_evenement: str | None = None  # "05:00:00"
+    prix_evenement: float
+
+
+class EvenementResponse(BaseModel):
+    id_evenement: int
+    nom_evenement: str
+    date_evenement: datetime
+    duree_evenement: str | None = None
+    prix_evenement: float
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
