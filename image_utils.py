@@ -44,8 +44,9 @@ def save_room_image(upload_file: UploadFile) -> str:
         with open(filepath, "wb") as buffer:
             shutil.copyfileobj(upload_file.file, buffer)
         
-        # Retourner l'URL accessible
-        return f"http://localhost:8000/images/rooms/{filename}"
+            # Construire l'URL publique en utilisant la base configurée (ou fallback)
+            api_base = os.environ.get("API_BASE", "http://127.0.0.1:9090").rstrip("/")
+            return f"{api_base}/images/rooms/{filename}"
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la sauvegarde: {str(e)}")
@@ -70,8 +71,9 @@ def save_profile_image(upload_file: UploadFile) -> str:
         with open(filepath, "wb") as buffer:
             shutil.copyfileobj(upload_file.file, buffer)
         
-        # Retourner l'URL accessible
-        return f"http://localhost:8000/images/profiles/{filename}"
+        # Construire l'URL publique en utilisant la base configurée (ou fallback)
+        api_base = os.environ.get("API_BASE", "http://127.0.0.1:9090").rstrip("/")
+        return f"{api_base}/images/profiles/{filename}"
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la sauvegarde: {str(e)}")
@@ -82,7 +84,11 @@ def delete_image_file(image_url: str) -> None:
     Supprimer un fichier image basé sur son URL
     """
     try:
-        if not image_url or not image_url.startswith("http://localhost:8000/images/"):
+        if not image_url:
+            return
+        api_base = os.environ.get("API_BASE", "http://127.0.0.1:9090").rstrip("/")
+        prefix = f"{api_base}/images/"
+        if not image_url.startswith(prefix) and not image_url.startswith("/images/"):
             return
         
         # Extraire le chemin du fichier depuis l'URL

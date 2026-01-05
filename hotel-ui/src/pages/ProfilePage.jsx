@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout, updateCurrentUser } from "../api/auth";
 import { uploadProfileImage } from "../api/images";
+import fallbackAvatar from "../assets/logo.svg";
 import { setAuth } from "../utils/auth";
 
 export default function ProfilePage() {
@@ -190,9 +191,15 @@ export default function ProfilePage() {
         <CardContent>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
-              <Avatar 
-                sx={{ width: 72, height: 72 }}
-                src={form.url_image_user || user?.url_image_user || undefined}
+              <Avatar
+                sx={{ width: 88, height: 88 }}
+                src={form.url_image_user || user?.url_image_user || fallbackAvatar}
+                imgProps={{
+                  onError: (e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = fallbackAvatar;
+                  },
+                }}
               >
                 {(user?.name || user?.username || "").charAt(0)}
               </Avatar>
@@ -264,7 +271,7 @@ export default function ProfilePage() {
                           src={form.url_image_user}
                           alt="Aperçu profil"
                           sx={{ maxWidth: "100%", height: "auto", maxHeight: 200, borderRadius: 1 }}
-                          onError={(e) => console.error("Image non valide:", e)}
+                          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackAvatar; }}
                         />
                       </Box>
                     )}
