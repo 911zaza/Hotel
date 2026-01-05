@@ -5,6 +5,9 @@ from config import Sessionlocal
 from models import Plat
 from dal import PlatDao
 
+from dal import CommandePlatDao, EvenementDao
+from models import CommandePlat, Evenement
+
 
 
 class Hotel:
@@ -15,6 +18,9 @@ class Hotel:
         self.room_dao = RoomDao(session)
         self.reservation_dao = ReservationDao(session)
         self.plat_dao = PlatDao(session)
+        self.commande_dao = CommandePlatDao(session)
+        self.evenement_dao = EvenementDao(session)
+
 
 
     def create_client(self, client: Client):
@@ -81,3 +87,34 @@ class Hotel:
 
     def update_plat(self, plat_id: int, plat: Plat):
         return self.plat_dao.update_plat(plat_id, plat)
+
+
+    # Commande Plat
+    def create_commande_plat(self, commande: CommandePlat):
+        return self.commande_dao.create(commande)
+
+    def delete_commande_plat(self, id_commande: int):
+        return self.commande_dao.delete(id_commande)
+
+    def update_commande_plat(self, id_commande: int, commande: CommandePlat):
+        return self.commande_dao.update(id_commande, commande)
+
+    def get_commande_by_client(self, client_id: int):
+        return self.commande_dao.get_by_client(client_id)
+
+    def get_commande_by_date(self, date):
+        return self.commande_dao.get_by_date(date)
+
+
+    # Evenement
+    def create_evenement(self, event: Evenement):
+        return self.evenement_dao.create(event)
+
+    def delete_evenement(self, id_evenement: int):
+        return self.evenement_dao.delete(id_evenement)
+
+    def update_evenement(self, id_evenement: int, event: Evenement):
+        return self.evenement_dao.update(id_evenement, event)
+
+    def get_evenement_by_id(self, id_evenement: int):
+        return self.evenement_dao.find_by_id(id_evenement)

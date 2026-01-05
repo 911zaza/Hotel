@@ -3,6 +3,10 @@
 
 @RESERVATION_URL=http://127.0.0.1:9090/reservations/
 
+@COMMANDE_URL=http://127.0.0.1:9090/commandes/
+
+@EVENEMENT_URL=http://127.0.0.1:9090/evenements/
+
 
 #################################################################
 ### CLIENTS
@@ -141,3 +145,77 @@ Content-Type: application/json
 
 ### Delete plat
 DELETE {{PLAT_URL}}1
+
+
+#################################################################
+### COMMANDES PLAT
+#################################################################
+
+### Get all commandes
+GET {{COMMANDE_URL}}
+
+### Create commande
+POST {{COMMANDE_URL}}
+Content-Type: application/json
+
+{
+  "id_client": 1,
+  "id_plat": 2,
+  "nom_plat": "Pizza Margherita",
+  "nb_deplat": 2,
+  "date_a_manger": "2026-01-10T12:00:00"
+}
+
+
+### Get commandes by client ID
+GET {{COMMANDE_URL}}client/1
+
+### Update commande by ID
+PUT {{COMMANDE_URL}}1
+Content-Type: application/json
+
+{
+  "client_id": 1,
+  "nom_plat": "Couscous Viande",
+  "nb_deplat": 3,
+  "date_a_manger": "2026-01-15T12:00:00"
+}
+
+### Delete commande by ID
+DELETE {{COMMANDE_URL}}1
+
+#################################################################
+### EVENEMENTS
+#################################################################
+
+### Get all evenements
+GET {{EVENEMENT_URL}}
+
+### Create evenement
+POST {{EVENEMENT_URL}}
+Content-Type: application/json
+
+{
+  "nom_evenement": "party",
+  "date_evenement": "2026-02-01T22:00:00",
+  "duree_evenement": "06:00:00",
+  "prix_evenement": 250.0
+}
+
+
+### Get evenement by ID
+GET {{EVENEMENT_URL}}2
+
+### Update evenement by ID
+PUT {{EVENEMENT_URL}}2
+Content-Type: application/json
+
+{
+  "nom_evenement": "Anniversaire",
+  "date_evenement": "2026-03-01T18:00:00",
+  "duree_evenement": "03:00:00",
+  "prix_evenement": 1500.0
+}
+
+### Delete evenement by ID
+DELETE {{EVENEMENT_URL}}4

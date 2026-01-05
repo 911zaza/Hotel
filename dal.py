@@ -1,7 +1,7 @@
 
 import datetime
 from sqlalchemy.orm import Session
-from models import Client, Plat, Room, Reservation
+from models import Client, CommandePlat, Evenement, Plat, Room, Reservation
 from typing import Optional
 
 
@@ -206,3 +206,79 @@ class PlatDao:
             self.session.rollback()
             return False
         return True
+
+
+
+# ==========================
+# CommandePlat DAO
+# ==========================
+class CommandePlatDao:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def create(self, commande: CommandePlat):
+        self.session.add(commande)
+        self.session.commit()
+        self.session.refresh(commande)
+        return True
+
+    def delete(self, id_commande: int):
+        c = self.session.query(CommandePlat).filter_by(id_commande=id_commande).one_or_none()
+        if not c:
+            return False
+        self.session.delete(c)
+        self.session.commit()
+        return True
+
+    def update(self, id_commande: int, updated: CommandePlat):
+        c = self.session.query(CommandePlat).filter_by(id_commande=id_commande).one_or_none()
+        if not c:
+            return False
+        c.nom_plat = updated.nom_plat
+        c.nb_deplat = updated.nb_deplat
+        c.date_a_manger = updated.date_a_manger
+        self.session.commit()
+        return True
+
+    def get_by_client(self, client_id: int):
+        return self.session.query(CommandePlat)\
+        .filter(CommandePlat.id_client == client_id).all()
+
+    def get_by_date(self, date):
+        return self.session.query(CommandePlat).filter_by(date_commande=date).all()
+
+
+# ==========================
+# Evenement DAO
+# ==========================
+class EvenementDao:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def create(self, event: Evenement):
+        self.session.add(event)
+        self.session.commit()
+        self.session.refresh(event)
+        return True
+
+    def delete(self, id_evenement: int):
+        e = self.session.query(Evenement).filter_by(id_evenement=id_evenement).one_or_none()
+        if not e:
+            return False
+        self.session.delete(e)
+        self.session.commit()
+        return True
+
+    def update(self, id_evenement: int, updated: Evenement):
+        e = self.session.query(Evenement).filter_by(id_evenement=id_evenement).one_or_none()
+        if not e:
+            return False
+        e.nom_evenement = updated.nom_evenement
+        e.date_evenement = updated.date_evenement
+        e.duree_evenement = updated.duree_evenement
+        e.prix_evenement = updated.prix_evenement
+        self.session.commit()
+        return True
+
+    def find_by_id(self, id_evenement: int):
+        return self.session.query(Evenement).filter_by(id_evenement=id_evenement).one_or_none()
