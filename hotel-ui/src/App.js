@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Box } from '@mui/material';
 import './App.css';
+import { RoomProvider } from './context/RoomContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -26,28 +27,37 @@ function AdminRoute({ children }) {
 
 export default function App() {
   return (
-    <Router>
-      <Header />
-      <Box component="main" sx={{ py: 6 }}>
-        <Container maxWidth="lg">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/rooms" element={<AdminRoute><RoomsPage /></AdminRoute>} />
-            <Route path="/clients" element={<AdminRoute><ClientsPage /></AdminRoute>} />
-            <Route
-              path="/reservations"
-              element={<PrivateRoute><ReservationsPage /></PrivateRoute>}
-            />
-            <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/restaurant" element={<RestaurantPage />} />
-            <Route path="/evenements" element={<EvenementPage />} />
-            <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-          </Routes>
-        </Container>
-      </Box>
-      <Footer />
-    </Router>
+    <RoomProvider>
+      <Router>
+        <Header />
+        <Box
+          component="main"
+          sx={{
+            minHeight: '100vh',
+            paddingTop: '80px',
+            backgroundColor: '#fef3e2',
+          }}
+        >
+          <Container maxWidth="lg" sx={{ py: 6 }}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/rooms" element={<AdminRoute><RoomsPage /></AdminRoute>} />
+              <Route path="/clients" element={<AdminRoute><ClientsPage /></AdminRoute>} />
+              <Route
+                path="/reservations"
+                element={<PrivateRoute><ReservationsPage /></PrivateRoute>}
+              />
+              <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/restaurant" element={<RestaurantPage />} />
+              <Route path="/evenements" element={<EvenementPage />} />
+              <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+            </Routes>
+          </Container>
+        </Box>
+        <Footer />
+      </Router>
+    </RoomProvider>
   );
 }
