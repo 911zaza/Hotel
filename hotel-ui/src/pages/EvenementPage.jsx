@@ -19,7 +19,7 @@ import {
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttendanceIcon from '@mui/icons-material/Groups';
-import { getEvenements, createEvenement, updateEvenement, deleteEvenement } from '../api/evenements';
+import { getEvenements, createEvenement, updateEvenement, deleteEvenement, uploadEvenementImage } from '../api/evenements';
 import { isAdmin, getUser } from '../utils/auth';
 
 export default function EvenementPage() {
@@ -35,7 +35,9 @@ export default function EvenementPage() {
     date_evenement: '',
     duree_evenement: '02:00:00',
     prix_evenement: '',
+    evenement_url: null,
   });
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     loadEvenements();
@@ -62,6 +64,7 @@ export default function EvenementPage() {
         date_evenement: evenement.date_evenement.split('T')[0],
         duree_evenement: evenement.duree_evenement || '02:00:00',
         prix_evenement: evenement.prix_evenement,
+        evenement_url: evenement.evenement_url || null,
       });
     } else {
       setEditingEvenement(null);
@@ -70,9 +73,26 @@ export default function EvenementPage() {
         date_evenement: '',
         duree_evenement: '02:00:00',
         prix_evenement: '',
+        evenement_url: null,
       });
     }
     setDialogOpen(true);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const res = await uploadEvenementImage(file);
+      const imageUrl = res.data.image_url;
+      setFormData({ ...formData, evenement_url: imageUrl });
+      setError('');
+    } catch (err) {
+      setError('Erreur lors de l\'upload de l\'image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleCloseDialog = () => {
@@ -270,6 +290,25 @@ export default function EvenementPage() {
             value={formData.prix_evenement}
             onChange={handleFormChange}
           />
+          <Box>
+            <input
+              accept="image/*"
+              id="evenement-image-input"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <label htmlFor="evenement-image-input">
+              <Button component="span" variant="outlined" size="small">
+                {uploadingImage ? 'Uploading...' : 'Téléverser une image'}
+              </Button>
+            </label>
+            {formData.evenement_url && (
+              <Box sx={{ mt: 1 }}>
+                <img src={formData.evenement_url} alt="preview" style={{ width: '100%', maxHeight: 200, objectFit: 'cover' }} />
+              </Box>
+            )}
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Annuler</Button>

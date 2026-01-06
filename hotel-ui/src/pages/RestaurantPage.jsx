@@ -15,7 +15,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { getPlats, createPlat, updatePlat, deletePlat } from '../api/plats';
+import { getPlats, createPlat, updatePlat, deletePlat, uploadPlatImage } from '../api/plats';
 import { createCommande } from '../api/commandes';
 import { getUser, isAdmin } from '../utils/auth';
 import { generateCommandePDF } from '../api/pdfGenerator';
@@ -37,7 +37,10 @@ export default function RestaurantPage() {
     prix_plat: '',
     ingredient_plat: '',
     disponibilite: true,
+    plat_url: null,
   });
+
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Form state for commande
   const [commandeForm, setCommandeForm] = useState({
@@ -74,6 +77,7 @@ export default function RestaurantPage() {
         prix_plat: '',
         ingredient_plat: '',
         disponibilite: true,
+        plat_url: null,
       });
     }
     setDialogOpen(true);
@@ -104,6 +108,22 @@ export default function RestaurantPage() {
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const res = await uploadPlatImage(file);
+      const imageUrl = res.data.image_url;
+      setFormData({ ...formData, plat_url: imageUrl });
+      setError('');
+    } catch (err) {
+      setError('Erreur lors de l\'upload de l\'image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleCommandeFormChange = (e) => {
@@ -198,18 +218,27 @@ export default function RestaurantPage() {
         {plats.map((plat) => (
           <Grid item xs={12} sm={6} md={4} key={plat.id}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardMedia
-                sx={{
-                  height: 200,
-                  backgroundColor: '#f5f5f5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 40,
-                }}
-              >
-                🍲
-              </CardMedia>
+              {plat.plat_url ? (
+                <CardMedia
+                  component="img"
+                  image={plat.plat_url}
+                  alt={plat.nom_plat}
+                  sx={{ height: 200, objectFit: 'cover' }}
+                />
+              ) : (
+                <CardMedia
+                  sx={{
+                    height: 200,
+                    backgroundColor: '#f5f5f5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 40,
+                  }}
+                >
+                  🍲
+                </CardMedia>
+              )}
               <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                   {plat.nom_plat}
@@ -320,6 +349,25 @@ export default function RestaurantPage() {
               style={{ marginRight: 10 }}
             />
             <Typography>Disponible</Typography>
+          </Box>
+          <Box>
+            <input
+              accept="image/*"
+              id="plat-image-input"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <label htmlFor="plat-image-input">
+              <Button component="span" variant="outlined" size="small">
+                {uploadingImage ? 'Uploading...' : 'Téléverser une image'}
+              </Button>
+            </label>
+            {formData.plat_url && (
+              <Box sx={{ mt: 1 }}>
+                <img src={formData.plat_url} alt="preview" style={{ width: '100%', maxHeight: 200, objectFit: 'cover' }} />
+              </Box>
+            )}
           </Box>
         </DialogContent>
         <DialogActions>

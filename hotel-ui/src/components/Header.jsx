@@ -7,6 +7,7 @@ import { isAuthenticated, logout, isAdmin } from '../utils/auth';
 export default function Header() {
   const navigate = useNavigate();
   const [header, setHeader] = useState(false);
+  const navColor = header ? '#ffffff' : '#000000';
 
   const handleLogout = () => {
     logout();
@@ -26,11 +27,12 @@ export default function Header() {
     <AppBar
       position="fixed"
       sx={{
-        background: header ? 'rgba(0, 0, 0, 0.98)' : 'rgba(0, 0, 0, 0.3)',
-        backdropFilter: 'blur(10px)',
+        background: header ? 'rgba(43, 43, 43, 0.9)' : 'transparent',
+        backdropFilter: header ? 'blur(8px)' : 'none',
         boxShadow: header ? 2 : 'none',
-        transition: 'all 0.3s ease-in-out',
+        transition: 'background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease',
         zIndex: 1000,
+        WebkitBackdropFilter: header ? 'blur(8px)' : 'none',
       }}
     >
       <Toolbar sx={{ display: 'flex', gap: 2, justifyContent: 'space-between' }}>
@@ -43,7 +45,7 @@ export default function Header() {
             component={Link}
             to="/explore"
             sx={{
-              color: '#fff',
+              color: navColor,
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -61,7 +63,7 @@ export default function Header() {
             component={Link}
             to="/restaurant"
             sx={{
-              color: '#fff',
+              color: navColor,
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -79,7 +81,7 @@ export default function Header() {
             component={Link}
             to="/evenements"
             sx={{
-              color: '#fff',
+              color: navColor,
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -98,7 +100,7 @@ export default function Header() {
               component={Link}
               to="/rooms"
               sx={{
-                color: '#fff',
+                color: navColor,
                 textTransform: 'uppercase',
                 fontSize: '0.875rem',
                 fontWeight: 600,
@@ -121,7 +123,7 @@ export default function Header() {
               component={Link}
               to="/reservations"
               sx={{
-                color: '#fff',
+                color: navColor,
                 textTransform: 'uppercase',
                 fontSize: '0.75rem',
                 fontWeight: 600,
@@ -140,7 +142,7 @@ export default function Header() {
               component={Link}
               to="/profile"
               sx={{
-                  color: '#fff',
+                  color: navColor,
                 textTransform: 'uppercase',
                 fontSize: '0.75rem',
                 fontWeight: 600,
@@ -158,7 +160,7 @@ export default function Header() {
               <Button
                 onClick={handleLogout}
                 sx={{
-                  color: '#fff',
+                  color: navColor,
                   backgroundColor: header ? 'transparent' : 'rgba(33, 150, 243, 0.8)',
                   textTransform: 'uppercase',
                   fontSize: '0.75rem',
@@ -178,7 +180,7 @@ export default function Header() {
                 component={Link}
                 to="/login"
                 sx={{
-                  color: '#fff',
+                  color: navColor,
                   backgroundColor: header ? 'transparent' : 'rgba(33, 150, 243, 0.8)',
                   textTransform: 'uppercase',
                   fontSize: '0.75rem',
