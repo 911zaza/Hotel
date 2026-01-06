@@ -16,7 +16,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { getPlats, createPlat, updatePlat, deletePlat } from '../api/plats';
-import { createCommande, getCommandesByClient } from '../api/commandes';
+import { createCommande } from '../api/commandes';
 import { getUser, isAdmin } from '../utils/auth';
 import { generateCommandePDF } from '../api/pdfGenerator';
 

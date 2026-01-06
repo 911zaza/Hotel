@@ -1,41 +1,198 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Box, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import { isAuthenticated, logout, isAdmin } from '../utils/auth';
 
 export default function Header() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const [header, setHeader] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setHeader(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-      <Toolbar sx={{ display: 'flex', gap: 2 }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        background: header ? 'rgba(255, 255, 255, 0.98)' : 'rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(10px)',
+        boxShadow: header ? 2 : 'none',
+        transition: 'all 0.3s ease-in-out',
+        zIndex: 1000,
+      }}
+    >
+      <Toolbar sx={{ display: 'flex', gap: 2, justifyContent: 'space-between' }}>
         <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img src={logo} alt="logo" style={{ height: 40 }} />
         </Box>
-        <Box sx={{ flex: 1 }} />
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button component={Link} to="/explore" color="inherit">Chambres</Button>
-          <Button component={Link} to="/restaurant" color="inherit">Restaurant</Button>
-          <Button component={Link} to="/evenements" color="inherit">Événements</Button>
-          {isAdmin() && <Button component={Link} to="/rooms" color="inherit">Gestion Chambres</Button>}
+
+        <Box sx={{ display: 'flex', gap: 3, flex: 1, justifyContent: 'center' }}>
+          <Button
+            component={Link}
+            to="/explore"
+            sx={{
+              color: header ? '#000' : '#fff',
+              textTransform: 'uppercase',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              '&:hover': {
+                color: '#2196F3',
+                backgroundColor: 'transparent',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Chambres
+          </Button>
+          <Button
+            component={Link}
+            to="/restaurant"
+            sx={{
+              color: header ? '#000' : '#fff',
+              textTransform: 'uppercase',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              '&:hover': {
+                color: '#2196F3',
+                backgroundColor: 'transparent',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Restaurant
+          </Button>
+          <Button
+            component={Link}
+            to="/evenements"
+            sx={{
+              color: header ? '#000' : '#fff',
+              textTransform: 'uppercase',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              '&:hover': {
+                color: '#2196F3',
+                backgroundColor: 'transparent',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Événements
+          </Button>
           {isAdmin() && (
-            <Button component={Link} to="/clients" color="inherit">Clients</Button>
+            <Button
+              component={Link}
+              to="/rooms"
+              sx={{
+                color: header ? '#000' : '#fff',
+                textTransform: 'uppercase',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                letterSpacing: '0.05em',
+                '&:hover': {
+                  color: '#2196F3',
+                  backgroundColor: 'transparent',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              Gestion
+            </Button>
           )}
-          {isAuthenticated() && <Button component={Link} to="/reservations" color="inherit">Mes Réservations</Button>}
-          {isAuthenticated() && <Button component={Link} to="/profile" color="inherit">Profil</Button>}
         </Box>
-        <Box sx={{ ml: 2 }}>
+
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          {isAuthenticated() && (
+            <Button
+              component={Link}
+              to="/reservations"
+              sx={{
+                color: header ? '#000' : '#fff',
+                textTransform: 'uppercase',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                '&:hover': {
+                  color: '#2196F3',
+                  backgroundColor: 'transparent',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              Réservations
+            </Button>
+          )}
+          {isAuthenticated() && (
+            <Button
+              component={Link}
+              to="/profile"
+              sx={{
+                color: header ? '#000' : '#fff',
+                textTransform: 'uppercase',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                '&:hover': {
+                  color: '#2196F3',
+                  backgroundColor: 'transparent',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              Profil
+            </Button>
+          )}
           {isAuthenticated() ? (
-            <Button onClick={handleLogout} variant="outlined">Déconnexion</Button>
+            <Button
+              onClick={handleLogout}
+              sx={{
+                color: header ? '#fff' : '#fff',
+                backgroundColor: header ? '#2196F3' : 'rgba(33, 150, 243, 0.8)',
+                textTransform: 'uppercase',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                padding: '8px 16px',
+                borderRadius: '4px',
+                '&:hover': {
+                  backgroundColor: '#1976D2',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              Déconnexion
+            </Button>
           ) : (
-            <Button component={Link} to="/login" variant="contained">Se connecter</Button>
+            <Button
+              component={Link}
+              to="/login"
+              sx={{
+                color: '#fff',
+                backgroundColor: header ? '#2196F3' : 'rgba(33, 150, 243, 0.8)',
+                textTransform: 'uppercase',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                padding: '8px 16px',
+                borderRadius: '4px',
+                '&:hover': {
+                  backgroundColor: '#1976D2',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              Se connecter
+            </Button>
           )}
         </Box>
       </Toolbar>
