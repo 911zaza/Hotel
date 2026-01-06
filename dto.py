@@ -149,6 +149,7 @@ class EvenementRequest(BaseModel):
     date_evenement: datetime
     duree_evenement: str | None = None  # "05:00:00"
     prix_evenement: float
+    evenement_url: str | None = None
 
 
 class EvenementResponse(BaseModel):
@@ -157,5 +158,6 @@ class EvenementResponse(BaseModel):
     date_evenement: datetime
     duree_evenement: str | None = None
     prix_evenement: float
+    evenement_url: str | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None

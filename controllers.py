@@ -23,7 +23,7 @@ from config import Sessionlocal
 from business import Hotel
 from dto import *
 from models import *
-from image_utils import save_room_image, delete_image_file
+from image_utils import save_room_image, save_event_image, delete_image_file
 from auth_controller import verify_token
 
 # ==========================
@@ -442,7 +442,8 @@ def create_evenement(data: EvenementRequest):
         nom_evenement=data.nom_evenement,
         date_evenement=data.date_evenement.date(),
         duree_evenement=data.duree_evenement,  # Keep as string
-        prix_evenement=data.prix_evenement
+        prix_evenement=data.prix_evenement,
+        evenement_url=data.evenement_url
     )
     service.create_evenement(e)
     return {"message": "Evenement ajouté", "id_evenement": e.id_evenement}
@@ -461,7 +462,8 @@ def update_evenement(id_evenement: int, data: EvenementRequest):
         nom_evenement=data.nom_evenement,
         date_evenement=data.date_evenement.date(),
         duree_evenement=data.duree_evenement,  # Keep as string
-        prix_evenement=data.prix_evenement
+        prix_evenement=data.prix_evenement,
+        evenement_url=data.evenement_url
     )
     if not service.update_evenement(id_evenement, e):
         raise HTTPException(status_code=404, detail="Evenement not found")
@@ -478,6 +480,7 @@ def get_evenements():
             date_evenement=e.date_evenement,
             duree_evenement=str(e.duree_evenement) if e.duree_evenement else None,
             prix_evenement=float(e.prix_evenement),
+            evenement_url=e.evenement_url,
             created_at=e.created_at,
             updated_at=e.updated_at
         ) for e in events
@@ -495,6 +498,20 @@ def get_evenement(id_evenement: int):
         date_evenement=e.date_evenement,
         duree_evenement=str(e.duree_evenement) if e.duree_evenement else None,
         prix_evenement=float(e.prix_evenement),
+        evenement_url=e.evenement_url,
         created_at=e.created_at,
         updated_at=e.updated_at
     )
+
+
+# Upload image for evenement (admin only)
+@evenement_router.post("/upload-image")
+def upload_evenement_image(file: UploadFile = File(...), current_user: User = Depends(verify_token), db: Session = Depends(get_db)):
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Seuls les admins peuvent uploader des images")
+
+    image_url = save_event_image(file)
+    return {
+        "image_url": image_url,
+        "message": "Image d'événement sauvegardée avec succès"
+    }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Box, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.svg';
+import logo from '../assets/img/hotele-black-logo.png';
 import { isAuthenticated, logout, isAdmin } from '../utils/auth';
 
 export default function Header() {
@@ -26,7 +26,7 @@ export default function Header() {
     <AppBar
       position="fixed"
       sx={{
-        background: header ? 'rgba(255, 255, 255, 0.98)' : 'rgba(0, 0, 0, 0.3)',
+        background: header ? 'rgba(0, 0, 0, 0.98)' : 'rgba(0, 0, 0, 0.3)',
         backdropFilter: 'blur(10px)',
         boxShadow: header ? 2 : 'none',
         transition: 'all 0.3s ease-in-out',
@@ -43,7 +43,7 @@ export default function Header() {
             component={Link}
             to="/explore"
             sx={{
-              color: header ? '#000' : '#fff',
+              color: '#fff',
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -61,7 +61,7 @@ export default function Header() {
             component={Link}
             to="/restaurant"
             sx={{
-              color: header ? '#000' : '#fff',
+              color: '#fff',
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -79,7 +79,7 @@ export default function Header() {
             component={Link}
             to="/evenements"
             sx={{
-              color: header ? '#000' : '#fff',
+              color: '#fff',
               textTransform: 'uppercase',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -98,7 +98,7 @@ export default function Header() {
               component={Link}
               to="/rooms"
               sx={{
-                color: header ? '#000' : '#fff',
+                color: '#fff',
                 textTransform: 'uppercase',
                 fontSize: '0.875rem',
                 fontWeight: 600,
@@ -121,7 +121,7 @@ export default function Header() {
               component={Link}
               to="/reservations"
               sx={{
-                color: header ? '#000' : '#fff',
+                color: '#fff',
                 textTransform: 'uppercase',
                 fontSize: '0.75rem',
                 fontWeight: 600,
@@ -140,7 +140,7 @@ export default function Header() {
               component={Link}
               to="/profile"
               sx={{
-                color: header ? '#000' : '#fff',
+                  color: '#fff',
                 textTransform: 'uppercase',
                 fontSize: '0.75rem',
                 fontWeight: 600,
@@ -154,46 +154,46 @@ export default function Header() {
               Profil
             </Button>
           )}
-          {isAuthenticated() ? (
-            <Button
-              onClick={handleLogout}
-              sx={{
-                color: header ? '#fff' : '#fff',
-                backgroundColor: header ? '#2196F3' : 'rgba(33, 150, 243, 0.8)',
-                textTransform: 'uppercase',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                padding: '8px 16px',
-                borderRadius: '4px',
-                '&:hover': {
-                  backgroundColor: '#1976D2',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              Déconnexion
-            </Button>
-          ) : (
-            <Button
-              component={Link}
-              to="/login"
-              sx={{
-                color: '#fff',
-                backgroundColor: header ? '#2196F3' : 'rgba(33, 150, 243, 0.8)',
-                textTransform: 'uppercase',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                padding: '8px 16px',
-                borderRadius: '4px',
-                '&:hover': {
-                  backgroundColor: '#1976D2',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              Se connecter
-            </Button>
-          )}
+            {isAuthenticated() ? (
+              <Button
+                onClick={handleLogout}
+                sx={{
+                  color: '#fff',
+                  backgroundColor: header ? 'transparent' : 'rgba(33, 150, 243, 0.8)',
+                  textTransform: 'uppercase',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  '&:hover': {
+                    backgroundColor: header ? 'rgba(255,255,255,0.06)' : '#1976D2',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Déconnexion
+              </Button>
+            ) : (
+              <Button
+                component={Link}
+                to="/login"
+                sx={{
+                  color: '#fff',
+                  backgroundColor: header ? 'transparent' : 'rgba(33, 150, 243, 0.8)',
+                  textTransform: 'uppercase',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  '&:hover': {
+                    backgroundColor: header ? 'rgba(255,255,255,0.06)' : '#1976D2',
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Se connecter
+              </Button>
+            )}
         </Box>
       </Toolbar>
     </AppBar>

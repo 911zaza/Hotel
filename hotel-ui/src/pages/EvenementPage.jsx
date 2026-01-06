@@ -144,18 +144,27 @@ export default function EvenementPage() {
         {evenements.map((evenement) => (
           <Grid item xs={12} sm={6} md={4} key={evenement.id_evenement}>
             <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardMedia
-                sx={{
-                  height: 200,
-                  backgroundColor: '#f5f5f5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 60,
-                }}
-              >
-                🎊
-              </CardMedia>
+              {evenement.evenement_url ? (
+                <CardMedia
+                  component="img"
+                  image={evenement.evenement_url}
+                  alt={evenement.nom_evenement}
+                  sx={{ height: 200, objectFit: 'cover' }}
+                />
+              ) : (
+                <CardMedia
+                  sx={{
+                    height: 200,
+                    backgroundColor: '#f5f5f5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 60,
+                  }}
+                >
+                  🎊
+                </CardMedia>
+              )}
               <CardContent sx={{ flexGrow: 1 }}>
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                   {evenement.nom_evenement}

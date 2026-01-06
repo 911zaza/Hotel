@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logout, updateCurrentUser } from "../api/auth";
 import { uploadProfileImage } from "../api/images";
-import fallbackAvatar from "../assets/logo.svg";
+import fallbackAvatar from "../assets/img/hotele-black-logo.png";
 import { setAuth } from "../utils/auth";
 
 export default function ProfilePage() {
