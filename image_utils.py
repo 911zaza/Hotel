@@ -10,10 +10,12 @@ from fastapi import UploadFile, HTTPException
 BASE_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "images")
 ROOM_IMAGES_DIR = os.path.join(BASE_IMAGE_DIR, "rooms")
 PROFILE_IMAGES_DIR = os.path.join(BASE_IMAGE_DIR, "profiles")
+EVENT_IMAGES_DIR = os.path.join(BASE_IMAGE_DIR, "events")
 
 # Créer les dossiers s'ils n'existent pas
 os.makedirs(ROOM_IMAGES_DIR, exist_ok=True)
 os.makedirs(PROFILE_IMAGES_DIR, exist_ok=True)
+os.makedirs(EVENT_IMAGES_DIR, exist_ok=True)
 
 # Extensions autorisées
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
@@ -79,6 +81,33 @@ def save_profile_image(upload_file: UploadFile) -> str:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la sauvegarde: {str(e)}")
 
 
+def save_event_image(upload_file: UploadFile) -> str:
+    """
+    Sauvegarder une image d'événement et retourner son URL
+    """
+    if not is_allowed_file(upload_file.filename):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Format non autorisé. Utilisez: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+
+    try:
+        # Créer un nom de fichier unique
+        filename = f"event_{Path(upload_file.filename).stem}_{int(os.urandom(4).hex(), 16)}{Path(upload_file.filename).suffix}"
+        filepath = os.path.join(EVENT_IMAGES_DIR, filename)
+
+        # Sauvegarder le fichier
+        with open(filepath, "wb") as buffer:
+            shutil.copyfileobj(upload_file.file, buffer)
+
+        # Construire l'URL publique en utilisant la base configurée (ou fallback)
+        api_base = os.environ.get("API_BASE", "http://127.0.0.1:9090").rstrip("/")
+        return f"{api_base}/images/events/{filename}"
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erreur lors de la sauvegarde: {str(e)}")
+
+
 def delete_image_file(image_url: str) -> None:
     """
     Supprimer un fichier image basé sur son URL
@@ -98,6 +127,9 @@ def delete_image_file(image_url: str) -> None:
         elif "/images/profiles/" in image_url:
             filename = image_url.split("/images/profiles/")[-1]
             filepath = os.path.join(PROFILE_IMAGES_DIR, filename)
+        elif "/images/events/" in image_url:
+            filename = image_url.split("/images/events/")[-1]
+            filepath = os.path.join(EVENT_IMAGES_DIR, filename)
         else:
             return
         

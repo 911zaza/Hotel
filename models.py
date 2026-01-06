@@ -147,6 +147,7 @@ class Evenement(Base):
     date_evenement = Column(Date, nullable=False)
     duree_evenement = Column(String, nullable=True) # interval type in PostgreSQL as string
     prix_evenement = Column(Float, nullable=False)
+    evenement_url = Column(String, nullable=True)
 
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
