@@ -2,19 +2,12 @@
   text-align: center;
 }
 
-:root {
-  --bg-pale: #f5efe6; /* pale beige page background */
-  --text-dark: #222222;
-  --muted: #6b6b6b;
-  --gold: #d8b86a;
-}
-
 /* Ensure full height layout */
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-pale);
-  color: var(--text-dark);
+  background-color: #0b0b0b; /* dark background overall */
+  color: #d4c3b2; /* beige text fallback */
   font-family: 'Inter', 'Roboto', sans-serif;
 }
 
@@ -42,7 +35,7 @@ body {
 
 /* Golden accents */
 .gold-accent {
-  color: var(--gold);
+  color: #ffd700;
 }
 
 /* Generated Grid helper (explicit) */
@@ -55,22 +48,9 @@ body {
   margin-top: 19px;
 }
 
-/* Make main page content text dark */
+/* Make main page content text black */
 main, .MuiContainer-root {
-  color: var(--text-dark) !important;
-}
-
-/* Page card surface for pale theme */
-.page-card, .MuiPaper-root {
-  background: #ffffff;
-  color: var(--text-dark);
-  box-shadow: 0 6px 18px rgba(34,34,34,0.06);
-}
-
-/* Section wrapper with subtle rounded container */
-.page-section {
-  background: transparent;
-  padding: 32px 0;
+  color: #000000 !important;
 }
 
 .MuiPaper-root {
