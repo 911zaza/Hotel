@@ -194,9 +194,34 @@ export default function ReservationsPage() {
         </TableContainer>
       )}
 
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>Nouvelle réservation</DialogTitle>
-        <DialogContent>
+      <Dialog 
+        open={openDialog} 
+        onClose={handleCloseDialog} 
+        maxWidth="md" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            backgroundColor: '#ffffff',
+            backgroundImage: 'none',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+            borderRadius: '8px',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          backgroundColor: '#1a1a1a',
+          color: '#d8b86a',
+          fontWeight: 'bold',
+          fontSize: '1.5rem',
+          borderBottom: '2px solid #d8b86a',
+          padding: '20px'
+        }}>
+          Nouvelle réservation
+        </DialogTitle>
+        <DialogContent sx={{ 
+          padding: '30px 20px',
+          backgroundColor: '#ffffff'
+        }}>
           <ReservationForm onSuccess={handleSuccess} onCancel={handleCloseDialog} />
         </DialogContent>
       </Dialog>

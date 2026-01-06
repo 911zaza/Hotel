@@ -6,7 +6,9 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5;
+  background-color: #0b0b0b; /* dark background overall */
+  color: #d4c3b2; /* beige text fallback */
+  font-family: 'Inter', 'Roboto', sans-serif;
 }
 
 #root {
@@ -18,6 +20,37 @@ body {
 /* Material-UI theme customization */
 .MuiTableContainer-root {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header text/link colors when on dark background */
+.MuiAppBar-root {
+  background-color: #b59e84a7 !important;
+  border-bottom: 3px solid #000000;
+  box-shadow: none;
+}
+/* Toolbar links/buttons in navigation should be black */
+.MuiToolbar-root a, .MuiToolbar-root button, .MuiToolbar-root .MuiButton-root {
+  color: inherit;
+}
+
+/* Golden accents */
+.gold-accent {
+  color: #ffd700;
+}
+
+/* Generated Grid helper (explicit) */
+.css-1559a0s-MuiGrid-root {
+  justify-content: center;
+}
+
+/* Small spacing tweak (explicit) */
+.css-57vz2g {
+  margin-top: 19px;
+}
+
+/* Make main page content text black */
+main, .MuiContainer-root {
+  color: #000000 !important;
 }
 
 .MuiPaper-root {

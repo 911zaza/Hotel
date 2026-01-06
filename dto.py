@@ -108,6 +108,7 @@ class PlatRequest(BaseModel):
     prix_plat: float = Field(..., gt=0)
     ingredient_plat: str = Field(..., min_length=3)
     disponibilite: bool = True
+    plat_url: str | None = None
 
 
 class PlatResponse(BaseModel):
@@ -117,6 +118,7 @@ class PlatResponse(BaseModel):
     prix_plat: float
     ingredient_plat: str
     disponibilite: bool
+    plat_url: str | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
 

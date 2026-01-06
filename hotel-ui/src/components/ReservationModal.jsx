@@ -176,22 +176,209 @@ export default function ReservationModal({ open, onClose, room }) {
   };
 
   return (
-    <Dialog open={!!open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Réserver la chambre {room?.room_number}</DialogTitle>
-      <DialogContent>
+    <Dialog 
+      open={!!open} 
+      onClose={onClose} 
+      fullWidth 
+      maxWidth="sm"
+      PaperProps={{
+        sx: {
+          backgroundColor: '#ffffff',
+          backgroundImage: 'none',
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          borderRadius: '8px',
+        }
+      }}
+    >
+      <DialogTitle sx={{ 
+        backgroundColor: '#1a1a1a',
+        color: '#d8b86a',
+        fontWeight: 'bold',
+        fontSize: '1.3rem',
+        borderBottom: '2px solid #d8b86a',
+        padding: '18px 20px'
+      }}>
+        Réserver la chambre {room?.room_number}
+      </DialogTitle>
+      <DialogContent sx={{ 
+        padding: '24px 20px',
+        backgroundColor: '#ffffff'
+      }}>
         {errorMessage && (
           <div style={{ background: '#fee2e2', color: '#991b1b', padding: 10, borderRadius: 6, marginBottom: 12, fontWeight: 600 }}>
             {errorMessage}
           </div>
         )}
-        <div style={{ display: 'grid', gap: 12, marginTop: 6 }}>
-          <TextField label="Prénom" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-          <TextField label="Nom" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-          <TextField type="number" label="Nombre de personnes" value={numPersons} onChange={(e) => setNumPersons(e.target.value)} />
-          <TextField type="datetime-local" label="Check-in" InputLabelProps={{ shrink: true }} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
-          <TextField type="datetime-local" label="Check-out" InputLabelProps={{ shrink: true }} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+        <div style={{ display: 'grid', gap: 14, marginTop: 12 }}>
+          <TextField 
+            label="Prénom" 
+            value={firstName} 
+            onChange={(e) => setFirstName(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#d8b86a',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#c9a450',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#d8b86a',
+                  borderWidth: 2,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#222222',
+              },
+              '& .MuiInputLabel-root': {
+                color: '#666',
+                '&.Mui-focused': {
+                  color: '#d8b86a',
+                },
+              },
+            }}
+          />
+          <TextField 
+            label="Nom" 
+            value={lastName} 
+            onChange={(e) => setLastName(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#d8b86a',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#c9a450',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#d8b86a',
+                  borderWidth: 2,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#222222',
+              },
+              '& .MuiInputLabel-root': {
+                color: '#666',
+                '&.Mui-focused': {
+                  color: '#d8b86a',
+                },
+              },
+            }}
+          />
+          <TextField 
+            type="number" 
+            label="Nombre de personnes" 
+            value={numPersons} 
+            onChange={(e) => setNumPersons(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#d8b86a',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#c9a450',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#d8b86a',
+                  borderWidth: 2,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#222222',
+              },
+              '& .MuiInputLabel-root': {
+                color: '#666',
+                '&.Mui-focused': {
+                  color: '#d8b86a',
+                },
+              },
+            }}
+          />
+          <TextField 
+            type="datetime-local" 
+            label="Check-in" 
+            InputLabelProps={{ shrink: true }} 
+            value={checkIn} 
+            onChange={(e) => setCheckIn(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#d8b86a',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#c9a450',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#d8b86a',
+                  borderWidth: 2,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#222222',
+              },
+              '& .MuiInputLabel-root': {
+                color: '#666',
+                '&.Mui-focused': {
+                  color: '#d8b86a',
+                },
+              },
+            }}
+          />
+          <TextField 
+            type="datetime-local" 
+            label="Check-out" 
+            InputLabelProps={{ shrink: true }} 
+            value={checkOut} 
+            onChange={(e) => setCheckOut(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#d8b86a',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#c9a450',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#d8b86a',
+                  borderWidth: 2,
+                },
+              },
+              '& .MuiInputBase-input': {
+                color: '#222222',
+              },
+              '& .MuiInputLabel-root': {
+                color: '#666',
+                '&.Mui-focused': {
+                  color: '#d8b86a',
+                },
+              },
+            }}
+          />
 
-          <FormControl>
+          <FormControl sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#d8b86a',
+              },
+              '&:hover fieldset': {
+                borderColor: '#c9a450',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#d8b86a',
+                borderWidth: 2,
+              },
+            },
+            '& .MuiInputBase-input': {
+              color: '#222222',
+            },
+            '& .MuiInputLabel-root': {
+              color: '#666',
+              '&.Mui-focused': {
+                color: '#d8b86a',
+              },
+            },
+          }}>
             <InputLabel id="payment-label">Paiement</InputLabel>
             <Select labelId="payment-label" value={paymentMethod} label="Paiement" onChange={(e) => setPaymentMethod(e.target.value)}>
               <MenuItem value="cash">Espèce</MenuItem>
@@ -201,16 +388,129 @@ export default function ReservationModal({ open, onClose, room }) {
 
           {paymentMethod === 'card' && (
             <>
-              <TextField label="Numéro de carte" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} />
-              <TextField label="Date d'expiration (MM/AA)" value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} />
-              <TextField label="CVC" value={cardCvc} onChange={(e) => setCardCvc(e.target.value)} />
+              <TextField 
+                label="Numéro de carte" 
+                value={cardNumber} 
+                onChange={(e) => setCardNumber(e.target.value)}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#d8b86a',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#c9a450',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#d8b86a',
+                      borderWidth: 2,
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    color: '#222222',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#666',
+                    '&.Mui-focused': {
+                      color: '#d8b86a',
+                    },
+                  },
+                }}
+              />
+              <TextField 
+                label="Date d'expiration (MM/AA)" 
+                value={cardExpiry} 
+                onChange={(e) => setCardExpiry(e.target.value)}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#d8b86a',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#c9a450',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#d8b86a',
+                      borderWidth: 2,
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    color: '#222222',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#666',
+                    '&.Mui-focused': {
+                      color: '#d8b86a',
+                    },
+                  },
+                }}
+              />
+              <TextField 
+                label="CVC" 
+                value={cardCvc} 
+                onChange={(e) => setCardCvc(e.target.value)}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#d8b86a',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#c9a450',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#d8b86a',
+                      borderWidth: 2,
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    color: '#222222',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: '#666',
+                    '&.Mui-focused': {
+                      color: '#d8b86a',
+                    },
+                  },
+                }}
+              />
             </>
           )}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>Annuler</Button>
-        <Button onClick={handleSubmit} variant="contained" disabled={loading}>Confirmer</Button>
+      <DialogActions sx={{ padding: '16px 20px', borderTop: '1px solid #e8dfd5' }}>
+        <Button 
+          onClick={onClose} 
+          disabled={loading}
+          sx={{
+            borderColor: '#ddd',
+            color: '#666',
+            fontWeight: 'bold',
+            '&:hover': {
+              borderColor: '#999',
+              backgroundColor: '#f5f5f5',
+            },
+          }}
+        >
+          Annuler
+        </Button>
+        <Button 
+          onClick={handleSubmit} 
+          variant="contained" 
+          disabled={loading}
+          sx={{
+            backgroundColor: '#d8b86a',
+            color: '#1a1a1a',
+            fontWeight: 'bold',
+            '&:hover': {
+              backgroundColor: '#c9a450',
+            },
+            '&.Mui-disabled': {
+              backgroundColor: '#ccc',
+              color: '#999',
+            },
+          }}
+        >
+          Confirmer
+        </Button>
       </DialogActions>
     </Dialog>
   );

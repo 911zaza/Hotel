@@ -35,7 +35,7 @@ export default function App() {
           sx={{
             minHeight: '100vh',
             paddingTop: '80px',
-            backgroundColor: '#fef3e2',
+            backgroundColor: '#e6d5c2',
           }}
         >
           <Container maxWidth="lg" sx={{ py: 6 }}>

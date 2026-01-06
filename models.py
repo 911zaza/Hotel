@@ -106,6 +106,7 @@ class Plat(Base):
     prix_plat = Column(Float, nullable=False)
     ingredient_plat = Column(String, nullable=False)
     disponibilite = Column(Boolean, default=True)
+    plat_url = Column(String, nullable=True)
 
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)

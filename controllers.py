@@ -23,7 +23,7 @@ from config import Sessionlocal
 from business import Hotel
 from dto import *
 from models import *
-from image_utils import save_room_image, save_event_image, delete_image_file
+from image_utils import save_room_image, save_event_image, save_plat_image, delete_image_file
 from auth_controller import verify_token
 
 # ==========================
@@ -306,7 +306,8 @@ def get_plats():
             type_plat=p.type_plat,
             prix_plat=p.prix_plat,
             ingredient_plat=p.ingredient_plat,
-            disponibilite=p.disponibilite
+            disponibilite=p.disponibilite,
+            plat_url=p.plat_url
         ) for p in service.list_all_plats()
     ]
 
@@ -321,7 +322,8 @@ def create_plat(platRequest: PlatRequest):
         type_plat=plat.type_plat,
         prix_plat=plat.prix_plat,
         ingredient_plat=plat.ingredient_plat,
-        disponibilite=plat.disponibilite
+        disponibilite=plat.disponibilite,
+        plat_url=plat.plat_url
     )
 
 
@@ -339,7 +341,8 @@ def update_plat(plat_id: int, platRequest: PlatRequest):
         type_plat=updated.type_plat,
         prix_plat=updated.prix_plat,
         ingredient_plat=updated.ingredient_plat,
-        disponibilite=updated.disponibilite
+        disponibilite=updated.disponibilite,
+        plat_url=updated.plat_url
     )
 
 
@@ -348,6 +351,19 @@ def delete_plat(plat_id: int):
     if not service.delete_plat(plat_id):
         raise HTTPException(status_code=404, detail="Plat not found")
     return {"message": "Plat supprimé avec succès"}
+
+
+# Upload image for plat (admin only)
+@plat_router.post("/upload-image")
+def upload_plat_image(file: UploadFile = File(...), current_user: User = Depends(verify_token), db: Session = Depends(get_db)):
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Seuls les admins peuvent uploader des images")
+
+    image_url = save_plat_image(file)
+    return {
+        "image_url": image_url,
+        "message": "Image de plat sauvegardée avec succès"
+    }
 
 
 
