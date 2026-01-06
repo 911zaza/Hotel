@@ -47,7 +47,7 @@ export default function App() {
               <Route path="/clients" element={<AdminRoute><ClientsPage /></AdminRoute>} />
               <Route
                 path="/reservations"
-                element={<PrivateRoute><ReservationsPage /></PrivateRoute>}
+                element={<AdminRoute><ReservationsPage /></AdminRoute>}
               />
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/restaurant" element={<RestaurantPage />} />

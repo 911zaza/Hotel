@@ -45,6 +45,21 @@ body {
   font-weight: 500;
 }
 
+/* Grid center alignment */
+.css-kqg16c-MuiGrid-root {
+  justify-content: center;
+}
+
+/* Card width */
+.css-1ihatvo-MuiPaper-root-MuiCard-root {
+  width: 252px;
+}
+
+/* Additional card width variant */
+.css-em32m3-MuiPaper-root-MuiCard-root {
+  width: 270px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .MuiContainer-root {

@@ -17,6 +17,7 @@ import {
   DialogContent,
   Alert,
 } from "@mui/material";
+import ReservationModal from '../components/ReservationModal';
 // Using emojis instead of icons
 import { getRooms } from "../api/rooms";
 // Using public images for better visual testing; replace with local assets if desired
@@ -31,6 +32,8 @@ export default function ExplorePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [reservationOpen, setReservationOpen] = useState(false);
+  const [reservationRoom, setReservationRoom] = useState(null);
 
   useEffect(() => {
     loadRooms();
@@ -74,8 +77,10 @@ export default function ExplorePage() {
   };
 
   const handleBook = () => {
+    // Close detail dialog and open reservation modal on this page
     setOpenDialog(false);
-    navigate("/reservations");
+    setReservationRoom(selectedRoom);
+    setReservationOpen(true);
   };
 
   // Returns the image URL for a room (from database)
@@ -258,6 +263,8 @@ export default function ExplorePage() {
           )}
         </DialogContent>
       </Dialog>
+      {/* Reservation modal opened from this page */}
+      <ReservationModal open={reservationOpen} onClose={() => setReservationOpen(false)} room={reservationRoom} />
     </Container>
   );
 }

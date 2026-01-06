@@ -116,7 +116,7 @@ export default function Header() {
         </Box>
 
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          {isAuthenticated() && (
+          {isAuthenticated() && isAdmin() && (
             <Button
               component={Link}
               to="/reservations"
