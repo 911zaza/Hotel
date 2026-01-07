@@ -43,6 +43,10 @@ hotel/
 │   └── package.json
 
 ---
+    # URLs API
+│   └── package.json
+
+---
 
 ## 🗂️ Entités principales
 
