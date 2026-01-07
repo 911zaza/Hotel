@@ -6,7 +6,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #0b0b0b; /* dark background overall */
+  background: linear-gradient(to bottom, #f5e6d3, #8b6f47); /* gradient chaud: beige clair vers marron foncé */
   color: #d4c3b2; /* beige text fallback */
   font-family: 'Inter', 'Roboto', sans-serif;
 }
@@ -92,7 +92,12 @@ main, .MuiContainer-root {
 .css-em32m3-MuiPaper-root-MuiCard-root {
   width: 270px;
 }
-
+/* Custom class for gradient background sections */
+.css-wc1ypt {
+  min-height: 100vh;
+  padding-top: 80px;
+  background: linear-gradient(to bottom, #f5e6d3, #8b6f47) !important; /* gradient chaud: beige vers marron */
+}
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .MuiContainer-root {

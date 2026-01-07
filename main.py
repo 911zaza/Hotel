@@ -22,10 +22,10 @@ app = FastAPI(
 # Configuration CORS pour permettre les requêtes depuis React
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # URL du frontend React
+    allow_origins=["*"],  # Autoriser toutes les origines (TEMP DEBUG)
     allow_credentials=True,
-    allow_methods=["*"],  # Permet tous les méthodes HTTP (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Permet tous les headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Configuration des fichiers statiques (images)
