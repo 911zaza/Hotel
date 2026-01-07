@@ -198,7 +198,7 @@ export default function RestaurantPage() {
   return (
     <Box sx={{ py: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h3" component="h1" className="page-title">
           🍽️ Restaurant
         </Typography>
         {isAdmin() && (

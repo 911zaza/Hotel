@@ -105,7 +105,7 @@ export default function ExplorePage() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, textAlign: "center" }}>
-        <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: "bold", mb: 2 }}>
+        <Typography variant="h3" component="h1" gutterBottom className="page-title" sx={{ mb: 2, display: 'inline-block' }}>
           Découvrez nos Chambres
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
