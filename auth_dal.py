@@ -45,7 +45,7 @@ class UserDao:
             print(f"Error updating user: {e}")
             return False
 
-
+#hashe pass
 def hash_password(password: str) -> str:
     """Hash password using SHA256 (simple hash for demo - use bcrypt in production)"""
     return hashlib.sha256(password.encode()).hexdigest()
